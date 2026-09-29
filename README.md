@@ -61,12 +61,13 @@ The app follows a **service-based architecture** so the UI can connect to a real
 
 ## Team
 
-| Member | Responsibility |
-|--------|----------------|
-| *(name)* | *(e.g. Login / Registration)* |
-| *(name)* | *(e.g. Dashboard)* |
-| *(name)* | *(e.g. Transaction forms)* |
-| *(name)* | *(e.g. Services / mock data)* |
+| Member           | Responsibility        |
+|----------------  |---------------------  |
+| *Dennis Keithly* | *Transaction History* |
+| *Gian Opbenita*  | *Withdraw*            |
+| *Patrik Guinn*   | *Login/Register*      |
+| *Sohan Shrestha* | *Deposit*             |
+| *(Yashvi Bhagat)*| *Transfer*            |
 
 ---
 
