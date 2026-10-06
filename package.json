@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "react": "^19.2.8",
+    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
     "tailwindcss": "^4.3.3"

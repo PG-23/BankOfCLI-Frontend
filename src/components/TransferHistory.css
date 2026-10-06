@@ -1,0 +1,38 @@
+.under-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+td:first-child,
+th:first-child {
+  text-align: left;
+}
+
+td:not(:first-child),
+th:not(:first-child) {
+  text-align: right;
+}
+
+table {
+  width: 100%;
+}
+
+.container {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: var(--color-surface);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
