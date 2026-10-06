@@ -1,9 +1,16 @@
-// Initial simple test to ensure functionality -PG
+import { useState } from "react";
+import Navbar from "./components/Navbar";
+import Deposit from "./components/Deposit";
 
 function App() {
+  const [activeView, setActiveView] = useState("dashboard");
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <h1 className="text-3xl font-bold text-blue-600">Bank of CLI</h1>
+    <div>
+      <Navbar activeView={activeView} onNavigate={setActiveView} />
+      {activeView === "deposit" && <Deposit />}
+
+      
+      <Deposit />
     </div>
   );
 }
