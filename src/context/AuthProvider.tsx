@@ -1,0 +1,42 @@
+import { useState, type ReactNode } from 'react';
+import type { AuthResponse } from '../models';
+import * as authService from '../services/authService';
+import { AuthContext } from './AuthContext';
+
+const STORAGE_KEY = 'bankofcli-auth';
+
+function loadSession(): AuthResponse | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as AuthResponse) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<AuthResponse | null>(loadSession);
+
+  const save = (res: AuthResponse | null) => {
+    setSession(res);
+    if (res) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(res));
+    else sessionStorage.removeItem(STORAGE_KEY);
+  };
+
+  const value = {
+    user: session?.user ?? null,
+    account: session?.account ?? null,
+    token: session?.token ?? null,
+    login: async (req: Parameters<typeof authService.login>[0]) => {
+      save(await authService.login(req));
+    },
+    register: async (req: Parameters<typeof authService.register>[0]) => {
+      const res = await authService.register(req);
+      save(res);
+      return res.user; // so the page can show the generated username
+    },
+    logout: () => save(null),
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
