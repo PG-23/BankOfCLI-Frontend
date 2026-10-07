@@ -1,5 +1,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useEffect, useRef, useState } from 'react';
+import ProfileMenu from './ProfileMenu';
+
 
 // Each button scrolls to a container on the dashboard page (no page change).
 // "id" must match the id="" on that container, e.g. <section id="transfer">.
@@ -8,6 +10,7 @@ const SECTIONS = [
   { id: 'deposit', label: 'Deposit' },
   { id: 'withdraw', label: 'Withdraw' },
   { id: 'transfer', label: 'Transfer' },
+  { id: 'transactions', label: 'Statements' }, // transaction history container
 ];
 
 function Navbar() {
@@ -86,9 +89,9 @@ function Navbar() {
         })}
       </div>
 
-      {/* RIGHT: profile (later) */}
+      {/* RIGHT: profile menu with logout */}
       <div>
-        {/* profile dropdown goes here */}
+        <ProfileMenu />
       </div>
     </nav>
   );
