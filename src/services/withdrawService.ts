@@ -1,91 +1,65 @@
-import mockAccount from '../mocks/mockAccount.json';
 import type {
   Account,
   ApiError,
-  ErrorCode,
   Transaction,
   TransactionResponse,
   WithdrawRequest,
 } from '../models';
+import { db, delay } from '../mocks/db';
 import { isValidCents } from '../utils/money';
 
-const NETWORK_DELAY_MS = 900;
-
-let currentAccount: Account = { ...mockAccount };
-
-function delay(milliseconds: number): Promise<void> {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, milliseconds);
-  });
-}
+const fail = (code: ApiError['code'], message: string, field?: string): never => {
+  throw { code, message, field } satisfies ApiError;
+};
 
 function createTransactionId(): string {
-  const date     = new Date().toISOString().slice(0, 10).replaceAll('-', '');
+  const date = new Date().toISOString().slice(0, 10).replaceAll('-', '');
   const sequence = Date.now().toString().slice(-6);
   return `TXN-${date}-${sequence}`;
 }
 
-export class ApiServiceError extends Error {
-  readonly code: ErrorCode;
-  readonly field?: string;
-
-  constructor(error: ApiError) {
-    super(error.message);
-    this.name  = 'ApiServiceError';
-    this.code  = error.code;
-    this.field = error.field;
-  }
-}
-
-export async function getWithdrawAccount(): Promise<Account> {
+export async function getWithdrawAccount(accountNumber: string): Promise<Account> {
   await delay(350);
-  return { ...currentAccount };
+
+  const account = db.accounts.find(item => item.accountNumber === accountNumber);
+  if (!account) {
+    fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.');
+  }
+
+  return { ...account! };
 }
 
-export async function withdraw(
-  request: WithdrawRequest,
-): Promise<TransactionResponse> {
-  await delay(NETWORK_DELAY_MS);
+export async function withdraw(request: WithdrawRequest): Promise<TransactionResponse> {
+  await delay();
 
   if (!isValidCents(request.amountCents)) {
-    throw new ApiServiceError({
-      code:    'INVALID_AMOUNT',
-      message: 'Enter a withdrawal amount greater than $0.00.',
-      field:   'amountCents',
-    });
+    fail('INVALID_AMOUNT', 'Enter a withdrawal amount greater than $0.00.', 'amountCents');
   }
 
-  if (request.accountNumber !== currentAccount.accountNumber) {
-    throw new ApiServiceError({
-      code:    'ACCOUNT_NOT_FOUND',
-      message: 'The selected account could not be found.',
-    });
+  const account = db.accounts.find(item => item.accountNumber === request.accountNumber);
+  if (!account) {
+    fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.');
   }
 
-  if (request.amountCents > currentAccount.balanceCents) {
-    throw new ApiServiceError({
-      code:    'INSUFFICIENT_FUNDS',
-      message: 'Insufficient funds for this withdrawal.',
-      field:   'amountCents',
-    });
+  if (request.amountCents > account!.balanceCents) {
+    fail('INSUFFICIENT_FUNDS', 'Insufficient funds for this withdrawal.', 'amountCents');
   }
 
-  currentAccount = {
-    ...currentAccount,
-    balanceCents: currentAccount.balanceCents - request.amountCents,
-  };
+  account!.balanceCents -= request.amountCents;
 
   const transaction: Transaction = {
     id: createTransactionId(),
-    type:              'withdrawal',
-    amountCents:       request.amountCents,
+    type: 'withdrawal',
+    amountCents: request.amountCents,
     fromAccountNumber: request.accountNumber,
-    toAccountNumber:   null,
-    timestamp:         new Date().toISOString(),
+    toAccountNumber: null,
+    timestamp: new Date().toISOString(),
   };
 
+  // When the shared transaction store/service lands in develop, this transaction
+  // can be appended there without changing the WithdrawForm contract.
   return {
     transaction,
-    newBalanceCents: currentAccount.balanceCents,
+    newBalanceCents: account!.balanceCents,
   };
 }
