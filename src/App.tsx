@@ -1,8 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { AuthProvider } from './context/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
-
-const LoginPage = () => <div className="p-8">Login page (coming soon)</div>;
+import { DepositPage } from './pages/DepositPage';
+import { DevAutoLogin } from './pages/DevAutoLogin'; // TEMPORARY — replace with the real LoginPage
 const RegisterPage = () => <div className="p-8">Register page (coming soon)</div>;
 const DashboardPage = () => <div className="p-8">Dashboard (teammate's feature)</div>;
 
@@ -11,10 +11,11 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<DevAutoLogin />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/deposit" element={<DepositPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
