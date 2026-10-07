@@ -12,7 +12,7 @@ In Progress — currently in the design and setup phase.
 
 - [x] Team roles assigned
 - [x] Figma design in progress
-- [ ] Project setup (framework, TypeScript, styling)
+- [X] Project setup (framework, TypeScript, styling)
 - [ ] Component layer
 - [ ] Service layer (mock data)
 - [ ] Data contracts (TypeScript interfaces)
@@ -67,7 +67,7 @@ The app follows a **service-based architecture** so the UI can connect to a real
 | *Gian Opbenita*  | *Withdraw*            |
 | *Patrik Guinn*   | *Login/Register*      |
 | *Sohan Shrestha* | *Deposit*             |
-| *(Yashvi Bhagat)*| *Transfer*            |
+| *Yashvi Bhagat*  | *Transfer*              |
 
 ---
 
