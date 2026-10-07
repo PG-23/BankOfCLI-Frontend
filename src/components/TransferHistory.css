@@ -1,38 +1,87 @@
+/* Styling for not the table */
 .under-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin: 10px 0px;
 }
 
-td:first-child,
-th:first-child {
-  text-align: left;
-}
-
-td:not(:first-child),
-th:not(:first-child) {
-  text-align: right;
-}
-
-table {
-  width: 100%;
-}
-
+/* Styling for the container that holds the whole TransferHistory component */
 .container {
   width: 95%;
   display: flex;
   flex-direction: column;
   padding: 20px;
   background-color: var(--color-surface);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 
+/************************************
+*           Table Format            *
+************************************/
+
+th {
+  padding-bottom: 10px;
+  border-bottom: 2px;
+}
+
+tbody > tr {
+  padding: 3px 0px 5px 0px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Give the transaction name/note more width than anything else */
+td:first-child,
+th:first-child {
+  text-align: left;
+  width: 65%;
+}
+
+/* Give date and amount some width */
+td:not(:first-child, :last-child),
+th:not(:first-child, :last-child) {
+  text-align: left;
+  width: 12%;
+}
+
+/* Let the balance have any left over amount */
+td:last-child,
+th:last-child {
+  text-align: right;
+}
+
+/*************************************
+*            Row Elements            *
+*************************************/
+
+/* Quick Definition, maybe redundant */
 .green {
   color: green;
 }
 
 .red {
   color: red;
+}
+
+/* For the icons indicating transfer/deposit/withdrawal */
+.icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  height: 18px;
+  width: 18px;
+}
+
+/*************************************
+*             Pagination             *
+*************************************/
+
+.pagination {
+  display: flex;
+  flex-direction: flex-row;
+  justify-content: space-between;
+}
+
+.current-page {
+  font-weight: bold;
 }
