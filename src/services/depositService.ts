@@ -10,11 +10,12 @@ function fail(code: ApiError['code'], message: string, field?: string): never {
   throw { code, message, field } satisfies ApiError;
 }
 
-// Contract format: TXN-YYYYMMDD-NNNNNN
+// Contract format: TXN-YYYYMMDD-NNNNNN, where NNNNNN keeps counting across all
+// transactions (matches the seed data in transactions.json), so IDs never repeat.
 function nextTransactionId(): string {
-  const prefix = `TXN-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-`;
-  const todaysCount = db.transactions.filter(t => t.id.startsWith(prefix)).length;
-  return prefix + String(todaysCount + 1).padStart(6, '0');
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const lastSeq = Math.max(0, ...db.transactions.map(t => Number(t.id.slice(-6)) || 0));
+  return `TXN-${date}-${String(lastSeq + 1).padStart(6, '0')}`;
 }
 
 // POST /transactions/deposit
