@@ -1,6 +1,7 @@
-import type { User, Account, Transaction } from '../models';
-import usersData from './users.json';
-import accountsData from './accounts.json';
+import type { User, Account, Transaction } from "../models";
+import transactionsData from "./transactions.json";
+import usersData from "./users.json";
+import accountsData from "./accounts.json";
 
 export type MockUser = User & { password: string }; // password exists only in mocks
 
@@ -8,7 +9,7 @@ export type MockUser = User & { password: string }; // password exists only in m
 export const db = {
   users: [...usersData] as MockUser[],
   accounts: [...accountsData] as Account[],
-  transactions: [] as Transaction[], // seed data (transactions.json) arrives with the transaction-service PR
+  transactions: [...transactionsData] as Transaction[], // initially empty, can be populated with mock transactions
 };
 
-export const delay = (ms = 800) => new Promise(res => setTimeout(res, ms));
+export const delay = (ms = 800) => new Promise((res) => setTimeout(res, ms));
