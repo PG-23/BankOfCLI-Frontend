@@ -26,10 +26,10 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="w-full max-w-[28rem] rounded-md bg-surface p-6 shadow-xl"
         onClick={e => e.stopPropagation()}
       >
-        <h2 id="modal-title" className="mb-4 text-lg font-semibold text-slate-900">
+        <h2 id="modal-title" className="mb-4 text-title font-semibold text-text-main">
           {title}
         </h2>
         {children}

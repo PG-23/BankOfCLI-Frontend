@@ -8,10 +8,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700',
-  secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300',
-  danger: 'bg-red-600 text-white hover:bg-red-700',
-};
+    primary: 'bg-primary-strong text-white hover:bg-primary-hover',
+    secondary: 'bg-secondary text-white hover:opacity-90',
+    danger: 'bg-error text-white hover:opacity-90',
+  };
 
 export function Button({
   variant = 'primary',
@@ -26,7 +26,7 @@ export function Button({
     <button
       {...props}
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium transition
+      className={`inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-base font-semibold transition
         disabled:cursor-not-allowed disabled:opacity-60
         ${variants[variant]} ${fullWidth ? 'w-full' : ''} ${className}`}
     >
