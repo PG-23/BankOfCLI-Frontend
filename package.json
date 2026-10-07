@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "bootstrap-icons": "^1.13.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
+    "sonner": "^2.0.8",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
