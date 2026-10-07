@@ -35,20 +35,21 @@ tbody > tr {
 td:first-child,
 th:first-child {
   text-align: left;
-  width: 65%;
+  width: 60%;
 }
 
 /* Give date and amount some width */
 td:not(:first-child, :last-child),
 th:not(:first-child, :last-child) {
   text-align: left;
-  width: 12%;
+  width: 15%;
 }
 
 /* Let the balance have any left over amount */
 td:last-child,
 th:last-child {
   text-align: right;
+  width: 10%;
 }
 
 /*************************************

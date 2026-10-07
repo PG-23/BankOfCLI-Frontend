@@ -1,3 +1,4 @@
+import type { Transaction } from "../models";
 import {
   ArrowDownCircleFill,
   ArrowUpCircleFill,
@@ -6,39 +7,56 @@ import {
 
 function TransferHistoryRow({
   transaction,
-  date,
-  type,
-  amount,
+  accountId,
 }: {
-  transaction: string;
-  date: string;
-  type: string;
-  amount: number;
+  transaction: Transaction;
+  accountId: string;
 }) {
+  // If the transaction is incoming to the account, the toAccountNumber will match the accountId
+  // If not it will be null or to the account we are transferring money to
+  const inToAccount = transaction.toAccountNumber === accountId ? true : false;
+
+  const date = new Date(transaction.timestamp);
+
   return (
     <tr>
       {/* Icon indicating the type of transaction */}
       {/* Green indicates money coming into account, red out of it */}
       <td className="flex flex-row items-center">
-        {type === "Deposit" ? (
-          <ArrowDownCircleFill className="green icon" />
+        {transaction.type === "deposit" ? (
+          <>
+            <ArrowDownCircleFill className="green icon" />
+            <span className="ml-2">Deposit</span>
+          </>
         ) : null}
-        {type === "Withdraw" ? (
-          <ArrowUpCircleFill className="red icon" />
+        {transaction.type === "withdrawal" ? (
+          <>
+            <ArrowUpCircleFill className="red icon" />
+            <span className="ml-2">Withdrawal</span>
+          </>
         ) : null}
-        {type === "Transfer" ? (
-          <ArrowLeftRight className={`${amount > 0 ? "green" : "red"} icon`} />
+        {/* Check if transfer and if money is coming in or out of account */}
+        {transaction.type === "transfer" ? (
+          <>
+            <ArrowLeftRight
+              className={`${inToAccount ? "green" : "red"} icon`}
+            />
+            <span className="ml-2">Transfer</span>
+          </>
         ) : null}
-        {transaction}
       </td>
-      <td>{date}</td>
-      <td>{type}</td>
+      <td>
+        {date.toLocaleDateString()} {date.toLocaleTimeString()}
+      </td>
+      <td>
+        {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+      </td>
 
       {/* Number indicating money in or out of account, color coded to indicate */}
-      <td className={`${amount >= 0 ? "green" : "red"}`}>
-        {Number(amount) >= 0
-          ? `+ $${Math.abs(amount)}`
-          : `- $${Math.abs(amount)}`}
+      <td className={`${inToAccount ? "green" : "red"}`}>
+        {inToAccount
+          ? `+ $${Math.abs(transaction.amountCents / 100).toFixed(2)}`
+          : `- $${Math.abs(transaction.amountCents / 100).toFixed(2)}`}
       </td>
     </tr>
   );
