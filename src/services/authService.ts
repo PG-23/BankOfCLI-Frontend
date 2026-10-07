@@ -1,5 +1,5 @@
 import type { ApiError, AuthResponse, LoginRequest, RegisterRequest, User } from '../models';
-import { db, delay } from '../mocks/db';
+import { db, delay, type MockUser } from '../mocks/db';
 import { isStrongPassword, isValidEmail, isValidName } from '../utils/validation';
 
 const fail = (code: ApiError['code'], message: string, field?: string): never => {
@@ -24,6 +24,16 @@ function generateAccountNumber(): string {
   return num;
 }
 
+function toPublicUser(u: MockUser): User {
+  return {
+    id: u.id,
+    firstName: u.firstName,
+    lastName: u.lastName,
+    username: u.username,
+    email: u.email,
+  };
+}
+
 function toAuthResponse(user: User): AuthResponse {
   const account = db.accounts.find(a => a.userId === user.id);
   if (!account) fail('ACCOUNT_NOT_FOUND', 'No account found for this user.');
@@ -37,7 +47,7 @@ export async function login(req: LoginRequest): Promise<AuthResponse> {
     u => (u.username === id || u.email.toLowerCase() === id) && u.password === req.password
   );
   if (!match) fail('INVALID_CREDENTIALS', 'Invalid username/email or password.');
-  const { password: _password, ...user } = match!;
+  const user = toPublicUser(match!);
   return toAuthResponse(user);
 }
 
