@@ -4,9 +4,14 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Navbar/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import { DepositPage } from './pages/DepositPage';
+import { DepositSection } from './components/deposit';
 
-const DashboardPage = () => <div className="p-8">Dashboard (teammate's feature)</div>;
+const DashboardPage = () => (
+  <div className="mx-auto flex w-full max-w-xl flex-col gap-6 p-8">
+    <p>Dashboard (teammate's feature)</p>
+    <DepositSection />
+  </div>
+);
 
 export default function App() {
   return (
@@ -18,9 +23,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             {/* Layout = navbar on top of every logged-in page */}
             <Route element={<Layout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/deposit" element={<DepositPage />} />
-            </Route>
+              <Route path="/dashboard" element={<DashboardPage />} />            </Route>
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>

@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from 'react';
-import type { ApiError, TransactionResponse } from '../models';
-import { Button, Input } from './ui';
-import { DEPOSIT_MAX_CENTS, DEPOSIT_MIN_CENTS, deposit } from '../services/depositService';
-import { formatCents, parseDollarsToCents } from '../utils/money';
-import { notify } from '../utils/notify';
+import type { ApiError, TransactionResponse } from '../../models';
+import { Button, Input } from '../ui';
+import { DEPOSIT_MAX_CENTS, DEPOSIT_MIN_CENTS, deposit } from '../../services/depositService';
+import { formatCents, parseDollarsToCents } from '../../utils/money';
+import { notify } from '../../utils/notify';
 
 type DepositCardProps = {
   accountNumber: string;

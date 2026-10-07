@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import type { ApiError } from '../models';
-import { DepositCard } from '../components/DepositCard';
-import { useAuth } from '../hooks/useAuth';
-import { getAccount } from '../services/accountService';
-import { formatCents } from '../utils/money';
+import type { ApiError } from '../../models';
+import { useAuth } from '../../hooks/useAuth';
+import { getAccount } from '../../services/accountService';
+import { DepositCard } from './DepositCard';
 
-export function DepositPage() {
+type DepositSectionProps = {
+  onDeposited?: (newBalanceCents: number) => void; // e.g. let the dashboard refresh its balance
+};
+
+// Drop-in deposit feature for the dashboard. Loads the logged-in user's current balance,
+// then shows the deposit form. id="deposit" is the target of the navbar's "Deposit" button.
+export function DepositSection({ onDeposited }: DepositSectionProps) {
   const { account } = useAuth();
   const accountNumber = account?.accountNumber;
   const [balanceCents, setBalanceCents] = useState<number | null>(null);
@@ -23,17 +28,7 @@ export function DepositPage() {
   }, [accountNumber]);
 
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-col gap-6 p-4 sm:p-6">
-      <div>
-        <h1 className="text-heading font-bold text-text-main">Deposit</h1>
-        {accountNumber && (
-          <p className="text-small text-text-muted">
-            Everyday account ••••{accountNumber.slice(-4)}
-            {balanceCents !== null && <> · Available balance <span className="tabular-nums">{formatCents(balanceCents)}</span></>}
-          </p>
-        )}
-      </div>
-
+    <section id="deposit" className="w-full">
       {loadError ? (
         <p role="alert" className="rounded-sm bg-error-bg p-4 text-error">{loadError}</p>
       ) : !accountNumber || balanceCents === null ? (
@@ -43,9 +38,12 @@ export function DepositPage() {
         <DepositCard
           accountNumber={accountNumber}
           balanceCents={balanceCents}
-          onDeposited={res => setBalanceCents(res.newBalanceCents)}
+          onDeposited={res => {
+            setBalanceCents(res.newBalanceCents);
+            onDeposited?.(res.newBalanceCents);
+          }}
         />
       )}
-    </main>
+    </section>
   );
 }
