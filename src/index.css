@@ -6,9 +6,9 @@
    DO NOT hardcode hex values in components — use these tokens.
    ============================================================ */
 
-
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
 
 @theme {
   /* ---------- Colors ---------- */
@@ -61,4 +61,3 @@
   --radius-sm: 8px;                  /* buttons, inputs */
   --radius-md: 12px;                 /* cards, containers */
 }
-
