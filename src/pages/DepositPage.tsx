@@ -23,7 +23,7 @@ export function DepositPage() {
   }, [accountNumber]);
 
   return (
-    <main className="mx-auto flex w-full max-w-[36rem] flex-col gap-lg p-md sm:p-lg">
+    <main className="mx-auto flex w-full max-w-xl flex-col gap-6 p-4 sm:p-6">
       <div>
         <h1 className="text-heading font-bold text-text-main">Deposit</h1>
         {accountNumber && (
@@ -35,7 +35,7 @@ export function DepositPage() {
       </div>
 
       {loadError ? (
-        <p role="alert" className="rounded-sm bg-error-bg p-md text-error">{loadError}</p>
+        <p role="alert" className="rounded-sm bg-error-bg p-4 text-error">{loadError}</p>
       ) : !accountNumber || balanceCents === null ? (
         // Skeleton while the mock service "loads" the account
         <div aria-busy="true" aria-label="Loading account" className="h-80 animate-pulse rounded-md border border-border bg-surface" />

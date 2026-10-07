@@ -80,9 +80,9 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-md rounded-md border border-border bg-surface p-lg"
+      className="flex flex-col gap-4 rounded-md border border-border bg-surface p-6"
     >
-      <div className="flex items-start gap-md">
+      <div className="flex items-start gap-4">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-success-bg text-primary">
           <DepositIcon className="size-5" />
         </span>
@@ -92,7 +92,7 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
         </div>
       </div>
 
-      <div className="flex flex-col gap-xs">
+      <div className="flex flex-col gap-1">
         <Input
           label="Deposit amount *"
           name="amount"
@@ -108,7 +108,7 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
         {!(showErrors && error) && <p className="text-small text-text-muted">{RANGE_MESSAGE}</p>}
       </div>
 
-      <div className="flex items-center justify-between gap-md">
+      <div className="flex items-center justify-between gap-4">
         <span className="text-small text-text-muted">Balance after deposit</span>
         <span className="font-semibold tabular-nums text-text-main">
           {formatCents(balanceCents + (cents ?? 0))}
@@ -116,7 +116,7 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
       </div>
 
       {cents !== null && (
-        <div role="status" className="flex gap-sm rounded-sm border-l-4 border-primary bg-success-bg p-md">
+        <div role="status" className="flex gap-2 rounded-sm border-l-4 border-primary bg-success-bg p-4">
           <CheckCircleIcon className="mt-0.5 size-5 shrink-0 text-primary" />
           <div>
             <p className="font-medium text-text-main">Ready to deposit</p>
