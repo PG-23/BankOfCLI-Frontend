@@ -1,0 +1,8 @@
+[
+  { "id": "TXN-0001", "type": "deposit", "amountCents": 100000,
+    "fromAccountNumber": null, "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-01T14:00:00Z" },
+  { "id": "TXN-0002", "type": "transfer", "amountCents": 65000,
+    "fromAccountNumber": "1000001234", "toAccountNumber": "1000005678",
+    "reference": "October rent", "timestamp": "2026-10-03T09:41:00Z" }
+]
