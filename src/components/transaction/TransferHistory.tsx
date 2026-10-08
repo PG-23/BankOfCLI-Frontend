@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuth } from "../../hooks/useAuth";
 import TransferHistoryRow from "./TransferHistoryRow";
 import "./TransferHistory.css";
 import {
@@ -8,16 +7,17 @@ import {
     PAGE_SIZE,
 } from "../../services/transactionService";
 import type { Transaction } from "../../models";
+import { useAuth } from "../../hooks/useAuth";
+import { Skeleton } from "../ui";
+import { notify } from "../../utils/notify";
 
 function TransferHistory() {
-   
-    // Logged-in user's account; changes after every deposit/withdraw/transfer (via updateBalance)
     const { account } = useAuth();
-        // Transactions shown in the table (current page)
-    const [dummyData, setDummyData] = React.useState<Transaction[]>([]);
+    const accountNumber = account?.accountNumber;
 
-
+    const [transactions, setTransactions] = React.useState<Transaction[]>([]);
     const [totalPages, setTotalPages] = React.useState(0);
+    const [loading, setLoading] = React.useState(true);
 
     // State for the current filter selection
     const [filter, setFilter] = React.useState<TransactionFilter>("all");
@@ -30,28 +30,39 @@ function TransferHistory() {
         0,
         Math.min(totalPages - 5, Math.max(0, page - 2)),
     );
+    const isLastPage = page >= totalPages - 1;
 
-    // Fetch transactions whenever the filter or page changes
+    // Fetch transactions whenever the account, filter, or page changes
     React.useEffect(() => {
-        if(!account) return;
+        if (!accountNumber) return;
+        let cancelled = false; // ignore results from outdated requests
+
         async function fetchData() {
-            const result = await getTransactionsFromId(account!.accountNumber,filter,page);
-            setDummyData(result.transactions);
-            setTotalPages(result.totalPages);
+            setLoading(true);
+            try {
+                const result = await getTransactionsFromId(accountNumber!, filter, page);
+                if (cancelled) return;
+                setTransactions(result.transactions);
+                setTotalPages(result.totalPages);
+            } catch {
+                if (!cancelled) notify.error("Could not load transactions.");
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
         }
         fetchData();
 
-        
-    }, [filter, page, account]);
-
-    // This will likely need to be replaced when get actual data but should be able to fit in just fine
+        return () => {
+            cancelled = true;
+        };
+    }, [accountNumber, filter, page]);
 
     return (
         <>
-            <div className="transaction-history" id="transactions">
+            <div className="container" id="transactions">
                 {/* Basic info + sorting capabilities */}
                 <div className="header">
-                    <h2 className="text-title font-semibold text-text-main">Recent transactions</h2>   
+                    <div className="text-title">Transactions</div>
                     <div className="under-title">
                         <div>Latest activity across your account.</div>
 
@@ -72,57 +83,70 @@ function TransferHistory() {
                 </div>
 
                 {/* Table for displaying transaction history */}
-                <table>
-                    {/* Table header for transaction history */}
+                <table aria-busy={loading}>
                     <thead>
                         <tr>
-                            <th className="text-base first-column">
-                                Transaction
-                            </th>
+                            <th className="text-base first-column">Transaction</th>
                             <th className="text-base text-align-right">Date</th>
                             <th className="text-base mid-column">Type</th>
-                            <th className="text-base text-align-left">
-                                Amount
-                            </th>
+                            <th className="text-base text-align-left">Amount</th>
                         </tr>
                     </thead>
 
-                    {/* Body - Mostly handled by TransferHistoryRow component */}
                     <tbody>
-                        {dummyData.map((item, index) => (
-                            <TransferHistoryRow
-                                key={index}
-                                transaction={item}
-                                accountId={account!.accountNumber}
-                            />
-                        ))}
-
-                        {/* If there are no values */}
-                        {Array.from({
-                            length: Math.max(0, PAGE_SIZE - dummyData.length),
-                        }).map((_, i) => (
-                            <tr
-                                key={i}
-                                className="empty-row"
-                                aria-hidden="true"
-                            >
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
+                        {loading ? (
+                            /* Skeleton rows while loading */
+                            Array.from({ length: PAGE_SIZE }, (_, i) => (
+                                <tr key={`skeleton-${i}`} aria-hidden="true">
+                                    <td><Skeleton className="h-4 w-32" /></td>
+                                    <td><Skeleton className="ml-auto h-4 w-20" /></td>
+                                    <td><Skeleton className="h-4 w-16" /></td>
+                                    <td><Skeleton className="h-4 w-20" /></td>
+                                </tr>
+                            ))
+                        ) : transactions.length === 0 ? (
+                            /* Empty state */
+                            <tr>
+                                <td colSpan={4} className="py-8 text-center text-text-muted">
+                                    {filter === "all"
+                                        ? "No transactions yet."
+                                        : "No transactions of this type."}
+                                </td>
                             </tr>
-                        ))}
+                        ) : (
+                            <>
+                                {transactions.map((item) => (
+                                    <TransferHistoryRow
+                                        key={item.id}
+                                        transaction={item}
+                                        accountId={accountNumber!}
+                                    />
+                                ))}
+
+                                {/* Filler rows keep the table height steady on the last page */}
+                                {Array.from({
+                                    length: Math.max(0, PAGE_SIZE - transactions.length),
+                                }).map((_, i) => (
+                                    <tr key={`empty-${i}`} className="empty-row" aria-hidden="true">
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                ))}
+                            </>
+                        )}
                     </tbody>
                 </table>
 
-                {/* Page Buttons*/}
+                {/* Page Buttons */}
                 <div className="pagination">
                     <button
                         onClick={() => {
                             if (page > 0) setPage(page - 1);
                         }}
                         className={`nav ${page === 0 ? "invisible" : "active"}`}
-                        disabled={page === 0}
+                        disabled={page === 0 || loading}
                     >
                         Previous
                     </button>
@@ -132,13 +156,13 @@ function TransferHistory() {
                         const isValid = index < totalPages;
                         const isCurrent = index === page;
 
-                        if (totalPages === 1) return null;
+                        if (totalPages <= 1) return null;
 
                         return (
                             <button
                                 key={index}
                                 className={`page ${isCurrent ? "current" : "active"} ${isValid ? "" : "invisible"}`}
-                                disabled={!isValid || totalPages === 1}
+                                disabled={!isValid || loading}
                                 onClick={() => {
                                     if (isValid) setPage(index);
                                 }}
@@ -150,10 +174,10 @@ function TransferHistory() {
 
                     <button
                         onClick={() => {
-                            if (page < totalPages - 1) setPage(page + 1);
+                            if (!isLastPage) setPage(page + 1);
                         }}
-                        className={`nav ${page === totalPages - 1 ? "invisible" : "active"}`}
-                        disabled={page === totalPages - 1}
+                        className={`nav ${isLastPage ? "invisible" : "active"}`}
+                        disabled={isLastPage || loading}
                     >
                         Next
                     </button>
