@@ -13,6 +13,9 @@ type DepositSectionProps = {
 export function DepositSection({ onDeposited }: DepositSectionProps) {
   const { account } = useAuth();
   const accountNumber = account?.accountNumber;
+    // Changes after any deposit / withdrawal / transfer (updateBalance), so we reload below
+  const sharedBalance = account?.balanceCents;
+
   const [balanceCents, setBalanceCents] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -25,7 +28,7 @@ export function DepositSection({ onDeposited }: DepositSectionProps) {
     return () => {
       cancelled = true;
     };
-  }, [accountNumber]);
+  }, [accountNumber,sharedBalance]);
 
   return (
     <section id="deposit" className="w-full">
