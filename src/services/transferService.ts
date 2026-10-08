@@ -8,10 +8,11 @@ const fail = (code: ApiError['code'],message:string,
         throw{code,message,field} satisfies ApiError;
     };
 
-function nextTransactionId(): string{
-    const numbers = db.transactions.map(t => Number(t.id.replace('TXN-','')) || 0);
-    const next = Math.max(0,...numbers) + 1;
-    return `TXN-${String(next).padStart(4,'0')}`;
+function nextTransactionId(): string {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const lastSeq = Math.max(0, ...db.transactions.map(t => Number(t.id.slice(-6)) || 0));
+    return `TXN-${date}-${String(lastSeq + 1).padStart(6, '0')}`;
+
 }
 
 export async function lookupRecipient(
