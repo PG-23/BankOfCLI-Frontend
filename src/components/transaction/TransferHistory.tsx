@@ -93,7 +93,7 @@ function TransferHistory() {
                             <TransferHistoryRow
                                 key={index}
                                 transaction={item}
-                                accountId="1000001234"
+                                accountId={account!.accountNumber}
                             />
                         ))}
 
