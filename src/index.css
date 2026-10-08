@@ -57,6 +57,14 @@
   --font-weight-semibold: 600;       /* buttons, nav, section titles */
   --font-weight-bold: 700;           /* page headings only */
 
+    /* ---------- Spacing (padding, margins, gaps) ---------- */
+  --spacing-xs: 4px;                 /* tight gaps — between a label and its input */
+  --spacing-sm: 8px;                 /* small gaps — between stacked form fields */
+  --spacing-md: 16px;                /* standard gap — inside cards, between elements */
+  --spacing-lg: 24px;                /* card padding, section spacing */
+  --spacing-xl: 32px;                /* large gaps — between major page sections */
+
+
   
 
   /* ---------- Border radius (rounded corners) ---------- */

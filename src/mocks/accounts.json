@@ -1,4 +1,5 @@
 [
   { "accountNumber": "1000001234", "balanceCents": 250000, "userId": "u_1" },
   { "accountNumber": "1000005678", "balanceCents": 98050, "userId": "u_2" }
+  
 ]
