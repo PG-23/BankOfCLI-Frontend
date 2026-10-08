@@ -29,6 +29,9 @@ export default function DashboardPage(){
                 </p>
                 <h1 className="mt-1 text-heading font-bold text-text-main">Welcome, {user?.firstName}.</h1>
                 {/* Account overview + transaction activity chart go here later */}
+                {/* <div className="mt-6">
+                    <ActivityChart />
+                </div> */}
 
                 </section>
                 {/* One container per navbar button. The ids must match the navbar.  */}

@@ -37,7 +37,10 @@ export function groupByMonth(transactions:Transaction[],accountNumber:string,mon
                 bucket.transfers += t.amountCents;
             }
         }
-        return result.map(({ key: _key, ...rest }) => rest);
+                // Return only the chart fields (drops the helper "key")
+        return result.map(({ month, deposits, withdrawals, transfers }) => ({ month, deposits, withdrawals, transfers }));
+
+
 
 
 
