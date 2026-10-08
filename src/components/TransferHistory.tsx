@@ -46,7 +46,7 @@ function TransferHistory() {
 
     return (
         <>
-            <div className="container">
+            <div className="container" id="transactions">
                 {/* Basic info + sorting capabilities */}
                 <div className="header">
                     <div className="text-title">Transactions</div>
