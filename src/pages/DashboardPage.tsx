@@ -12,7 +12,9 @@ import AccountOverview from '../components/account/AccountOverview';
 
 export default function DashboardPage(){
     //Logged in user,for the "welcome, xxx" heading
-    const{ user } = useAuth();
+    //const{ user } = useAuth();
+    const { user, updateBalance } = useAuth();
+
     return(
         //page background behind all containers
         <div className='min-h-screen bg-background'>
@@ -38,8 +40,8 @@ export default function DashboardPage(){
 
                 </section>
                 {/* One container per navbar button. The ids must match the navbar.  */}
-                <DepositSection />
-                <WithdrawForm />
+                <DepositSection onDeposited={updateBalance} />
+                <WithdrawForm onWithdrawalComplete={(_transaction, newBalanceCents) => updateBalance(newBalanceCents)} />
                 <TransferForm />
                 <TransferHistory />
                 

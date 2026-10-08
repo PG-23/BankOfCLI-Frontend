@@ -36,6 +36,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return res.user; // so the page can show the generated username
     },
     logout: () => save(null),
+    // Replace only the balance; keeps user, token and account number the same.
+    // save() also writes it to sessionStorage, so it survives switching pages.
+    updateBalance: (newBalanceCents: number) => {
+      if (!session) return;
+      save({ ...session, account: { ...session.account, balanceCents: newBalanceCents } });
+    },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

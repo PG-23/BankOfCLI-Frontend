@@ -34,7 +34,8 @@ interface ReviewData {
 
 export function TransferForm() {
   // The logged-in user's account = the sender. Never typed by the user.
-  const { account } = useAuth();
+    const { account, updateBalance } = useAuth();
+
 
   // ---------- State ----------
   const [toAccount, setToAccount] = useState('');                              // what the user typed
@@ -204,6 +205,8 @@ async function handleConfirm(){
       reference:review.reference,
     });
     setResult(res); // switches to the success screen
+    updateBalance(res.newBalanceCents); // update the balance everywhere on the page
+
     notify.success(`${formatCents(review.amountCents)} sent to ${review.recipient.firstName}`);
   } catch(err){
     const apiError = err as ApiError;
