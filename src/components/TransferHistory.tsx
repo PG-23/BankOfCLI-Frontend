@@ -100,33 +100,44 @@ function TransferHistory() {
                 {/* Page Buttons*/}
                 <div className="pagination">
                     <button
-                        onClick={() => setPage(page - 1)}
-                        className={page == 0 ? "inactive" : "active"}
+                        onClick={() => {
+                            if (page > 0) setPage(page - 1);
+                        }}
+                        className={`nav ${page === 0 ? "invisible" : "active"}`}
+                        disabled={page === 0}
                     >
-                        {page == 0 ? " " : "Previous"}
+                        Previous
                     </button>
 
                     {Array.from({ length: 5 }, (_, i) => {
                         const index = startingPage + i;
+                        const isValid = index < totalPages;
+                        const isCurrent = index === page;
+
+                        if (totalPages === 1) return null;
 
                         return (
                             <button
                                 key={index}
-                                className={`${i === page ? "current" : "show"} ${i < totalPages ? "active" : "inactive"}`}
-                                onClick={() => setPage(index)}
+                                className={`page ${isCurrent ? "current" : "active"} ${isValid ? "" : "invisible"}`}
+                                disabled={!isValid || totalPages === 1}
+                                onClick={() => {
+                                    if (isValid) setPage(index);
+                                }}
                             >
-                                {i < totalPages ? index + 1 : " "}
+                                {isValid ? index + 1 : "0"}
                             </button>
                         );
                     })}
 
                     <button
-                        onClick={() => setPage(page + 1)}
-                        className={
-                            page == totalPages - 1 ? "inactive" : "active"
-                        }
+                        onClick={() => {
+                            if (page < totalPages - 1) setPage(page + 1);
+                        }}
+                        className={`nav ${page === totalPages - 1 ? "invisible" : "active"}`}
+                        disabled={page === totalPages - 1}
                     >
-                        {page == totalPages - 1 ? " " : "Next"}
+                        Next
                     </button>
                 </div>
             </div>

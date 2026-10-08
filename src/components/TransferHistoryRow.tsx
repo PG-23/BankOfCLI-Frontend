@@ -43,7 +43,11 @@ function TransferHistoryRow({
                         <ArrowLeftRight
                             className={`${inToAccount ? "green" : "red"} icon`}
                         />
-                        <span className="ml-2">Transfer</span>
+                        <span className="ml-2">
+                            {inToAccount
+                                ? `Transfer from account ${transaction.fromAccountNumber}`
+                                : `Transfer to account ${transaction.toAccountNumber}`}
+                        </span>
                     </>
                 ) : null}
             </td>
