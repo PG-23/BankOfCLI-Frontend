@@ -1,5 +1,5 @@
 import { useAuth } from '../hooks/useAuth';
-import { TransferForm } from '../components/transfer/TransferForm';
+//import { TransferForm } from '../components/transfer/TransferForm';
 
 //Temporary box for a feature that isn't merged yet.
 //Each user replaces their box with the real component (which must keep the same id).
@@ -34,7 +34,7 @@ export default function DashboardPage(){
                 {/* One container per navbar button. The ids must match the navbar.  */}
                 <ComingSoon id="deposit" title="Deposit"/>
                  <ComingSoon id="withdraw" title="withdraw"/>
-                <TransferForm /> 
+                 <ComingSoon id="transfer" title="transfer"/>
                  <ComingSoon id="transaction" title="Recent transactions"/>
 
                 </main> 
