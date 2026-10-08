@@ -4,8 +4,9 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Navbar/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 
-const DashboardPage = () => <div className="p-8">Dashboard (teammate's feature)</div>;
+
 
 export default function App() {
   return (
