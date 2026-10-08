@@ -9,7 +9,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-
 @theme {
   /* ---------- Colors ---------- */
   /* ---------- Surfaces ---------- */
@@ -34,6 +33,13 @@
   --color-success-bg: #E8F6F2;       /* success toast / message background */
   --color-error-bg: #FFF0F2;         /* error toast / message background */
 
+
+  /* ---------- Login / register background glows ---------- */
+  --color-glow-teal: #D8F3EE;        /* main pale teal glow */
+  --color-glow-peach: #FFF1E8;       /* main warm peach glow */
+  --color-accent-teal: #E6F7F2;      /* soft teal accent */
+  --color-accent-peach: #FFE9DD;     /* soft peach accent */
+
   /* ---------- Font family ---------- */
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
                                      /* Inter everywhere — the default app font */
@@ -50,9 +56,37 @@
   --font-weight-semibold: 600;       /* buttons, nav, section titles */
   --font-weight-bold: 700;           /* page headings only */
 
+    /* ---------- Spacing (padding, margins, gaps) ---------- */
+  --spacing-xs: 4px;                 /* tight gaps — between a label and its input */
+  --spacing-sm: 8px;                 /* small gaps — between stacked form fields */
+  --spacing-md: 16px;                /* standard gap — inside cards, between elements */
+  --spacing-lg: 24px;                /* card padding, section spacing */
+  --spacing-xl: 32px;                /* large gaps — between major page sections */
+
+
   
 
   /* ---------- Border radius (rounded corners) ---------- */
   --radius-sm: 8px;                  /* buttons, inputs */
   --radius-md: 12px;                 /* cards, containers */
+
+
+/* Login / register page background: off-white base with soft teal and peach glows.
+   Each radial-gradient is one glow: a color at a position that fades to transparent.
+   color-mix(... 90%, transparent) applies the opacity from the design. */
+
+
+}
+.auth-background {
+  background-color: var(--color-background); /* off-white base, 100% */
+  background-image:
+    /* main pale teal glow, top-left, 90% */
+    radial-gradient(circle at 10% 15%, color-mix(in srgb, var(--color-glow-teal) 90%, transparent), transparent 45%),
+    /* main warm peach glow, bottom-right, 90% */
+    radial-gradient(circle at 90% 85%, color-mix(in srgb, var(--color-glow-peach) 90%, transparent), transparent 45%),
+    /* soft teal accent, top-right, 70% */
+    radial-gradient(circle at 85% 10%, color-mix(in srgb, var(--color-accent-teal) 70%, transparent), transparent 30%),
+    /* soft peach accent, bottom-left, 70% */
+    radial-gradient(circle at 15% 90%, color-mix(in srgb, var(--color-accent-peach) 70%, transparent), transparent 30%);
+  background-attachment: fixed; /* glows stay in place if the register form scrolls */
 }
