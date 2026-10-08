@@ -1,10 +1,10 @@
-import type { Transaction } from "../models";
+import type { Transaction } from "../../models";
 import {
     ArrowDownCircleFill,
     ArrowUpCircleFill,
     ArrowLeftRight,
 } from "react-bootstrap-icons";
-import { formatCents } from "../utils/money";
+import { formatCents } from "../../utils/money";
 
 function TransferHistoryRow({
     transaction,
