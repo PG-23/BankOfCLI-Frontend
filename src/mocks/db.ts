@@ -9,7 +9,7 @@ export type MockUser = User & { password: string }; // password exists only in m
 export const db = {
   users: [...usersData] as MockUser[],
   accounts: [...accountsData] as Account[],
-  transactions: [...transactionsData] as Transaction[], // initially empty, can be populated with mock transactions
+  transactions: [...transactionsData] as Transaction[], // oldest first; account balances equal the sum of this history
 };
 
 export const delay = (ms = 800) => new Promise((res) => setTimeout(res, ms));
