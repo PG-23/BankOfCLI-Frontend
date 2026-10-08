@@ -4,14 +4,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Navbar/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import { DepositSection } from './components/deposit';
+import DashboardPage from './pages/DashboardPage';
 
-const DashboardPage = () => (
-  <div className="mx-auto flex w-full max-w-xl flex-col gap-6 p-8">
-    <p>Dashboard (teammate's feature)</p>
-    <DepositSection />
-  </div>
-);
 
 export default function App() {
   return (
