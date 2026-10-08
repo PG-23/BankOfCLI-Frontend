@@ -9,13 +9,14 @@
 }
 
 /* Styling for the container that holds the whole TransferHistory component */
-.container {
-    width: 95%;
+
+.transaction-history {
+    width: 100%;
     display: flex;
     flex-direction: column;
     padding: 20px;
     background-color: var(--color-surface);
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     align-items: stretch;
 }
@@ -42,14 +43,14 @@ tbody > tr {
 td:first-child,
 th:first-child {
     text-align: left;
-    width: 60%;
+    width: 50%;
 }
 
 /* Give date and amount some width */
 td:not(:first-child, :last-child),
 th:not(:first-child, :last-child) {
     text-align: left;
-    width: 15%;
+    width: 20%;
 }
 
 /* Let the balance have any left over amount */

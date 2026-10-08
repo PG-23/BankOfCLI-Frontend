@@ -1,30 +1,24 @@
 import "./AccountOverview.css";
 import { useState } from "react";
-import { formatCents } from "../utils/money";
+import { formatCents } from "../../utils/money";
 import { BiCreditCard, BiUser, BiEnvelope } from "react-icons/bi";
+import { useAuth } from "../../hooks/useAuth";
 
 function AccountOverview() {
     const [showAccountInfo, setShowAccountInfo] = useState(false);
 
-    // Dummy data for demonstration purposes
-    const dummyAccount = {
-        balanceCents: 250000,
-        accountNumber: "1000001234",
-    };
-    const dummyUser = {
-        firstName: "Alice",
-        lastName: "Smith",
-        username: "asmith1234",
-        email: "alice@bank.com",
-    };
+    // Logged-in user and their account (from AuthProvider)
+    const { user, account } = useAuth();
+    if (!user || !account) return null; // dashboard is protected, but stay safe
+
 
     return (
-        <div className="container" id="dashboard">
+        <div className="container-overview">
             {/* Title Section */}
             <div className="title-container">
                 <div className="title">Account Overview</div>
                 <div className="user-name">
-                    {dummyUser.firstName} {dummyUser.lastName}
+                    {user.firstName} {user.lastName}
                 </div>
             </div>
 
@@ -32,7 +26,7 @@ function AccountOverview() {
             <div className="account-balance">
                 <div className="subtitle">Available Balance</div>
                 <div className="amount">
-                    {formatCents(dummyAccount.balanceCents)}
+                    {formatCents(account.balanceCents)}
                 </div>
             </div>
 
@@ -46,17 +40,17 @@ function AccountOverview() {
                             <BiCreditCard size={24} /> Account Number{" "}
                         </div>
                         {showAccountInfo ? (
-                            dummyAccount.accountNumber
+                            account.accountNumber
                         ) : (
                             // I cannot figure out why the first dot is lower than the others. Any of the fixes I try or other censor characters have the same fault
                             <>
                                 {/* Censor all but the last 4 digits of the account number */}
                                 {"•".repeat(
-                                    dummyAccount.accountNumber.length - 4,
+                                    account.accountNumber.length - 4,
                                 )}
-                                {dummyAccount.accountNumber.substring(
-                                    dummyAccount.accountNumber.length - 4,
-                                    dummyAccount.accountNumber.length,
+                                {account.accountNumber.substring(
+                                    account.accountNumber.length - 4,
+                                    account.accountNumber.length,
                                 )}
                             </>
                         )}
@@ -68,13 +62,13 @@ function AccountOverview() {
                                     <div className="icon-row">
                                         <BiUser size={24} /> Username
                                     </div>
-                                    <div>{dummyUser.username}</div>
+                                    <div>{user.username}</div>
                                 </div>
                                 <div className="row">
                                     <div className="icon-row">
                                         <BiEnvelope size={24} /> Email
                                     </div>
-                                    <div>{dummyUser.email}</div>
+                                    <div>{user.email}</div>
                                 </div>
                             </>
                         )}

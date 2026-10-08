@@ -2,17 +2,13 @@ import { useAuth } from '../hooks/useAuth';
 import { TransferForm } from '../components/transfer/TransferForm';
 import { ActivityChart } from '../components/dashboard/ActivityChart';
 import { DepositSection } from '../components/deposit';
+import { WithdrawForm } from '../components/WithdrawForm';
+import TransferHistory from '../components/transaction/TransferHistory';
+import AccountOverview from '../components/account/AccountOverview';
+
 
 //Temporary box for a feature that isn't merged yet.
 //Each user replaces their box with the real component (which must keep the same id).
-function ComingSoon({id,title}:{id:string;title:string}){
-    return(
-        <section id={id} className='rounded-md border border-dashed border-border bg-surface p-6'>
-            <h2 className='text-title font-semibold text-text-main'>{title}</h2>
-            <p className='text-small text-text-muted'>Coming Soon.this container being build on its own branch. </p>
-        </section>
-    );
-}
 
 export default function DashboardPage(){
     //Logged in user,for the "welcome, xxx" heading
@@ -31,17 +27,24 @@ export default function DashboardPage(){
                 </p>
                 <h1 className="mt-1 text-heading font-bold text-text-main">Welcome, {user?.firstName}.</h1>
                 {/* Account overview + transaction activity chart go here later */}
-                <div className="mt-6">
-                    <ActivityChart />
+                                {/* Account overview (left, 1/3) + activity chart (right, 2/3). Stacked on phones. */}
+                <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                    <AccountOverview />
+                    <div className="lg:col-span-2">
+                        <ActivityChart />
+                    </div>
                 </div>
+
 
                 </section>
                 {/* One container per navbar button. The ids must match the navbar.  */}
                 <DepositSection />
-
-                 <ComingSoon id="withdraw" title="withdraw"/>
-                 <ComingSoon id="transfer" title="transfer"/>
-                 <ComingSoon id="transactions" title="Recent transactions"/>
+                <WithdrawForm />
+                <TransferForm />
+                <TransferHistory />
+                
+                
+                 
 
                 </main> 
         </div>

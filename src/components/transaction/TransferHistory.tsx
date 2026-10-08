@@ -5,8 +5,8 @@ import {
     getTransactionsFromId,
     type TransactionFilter,
     PAGE_SIZE,
-} from "../services/transactionService";
-import type { Transaction } from "../models";
+} from "../../services/transactionService";
+import type { Transaction } from "../../models";
 
 function TransferHistory() {
     // Dummy data for transaction history
@@ -46,10 +46,10 @@ function TransferHistory() {
 
     return (
         <>
-            <div className="container" id="transactions">
+            <div className="transaction-history" id="transactions">
                 {/* Basic info + sorting capabilities */}
                 <div className="header">
-                    <div className="text-title">Transactions</div>
+                    <h2 className="text-title font-semibold text-text-main">Recent transactions</h2>   
                     <div className="under-title">
                         <div>Latest activity across your account.</div>
 

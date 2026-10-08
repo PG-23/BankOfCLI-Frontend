@@ -26,8 +26,13 @@ export function ActivityChart() {
       <p className="text-small text-text-muted">Deposits, withdrawals, and outgoing transfers over the last 6 months.</p>
 
       <div className="mt-4 h-64">
-        {data === null ? (
+           {data === null ? (
           <p className="text-small text-text-muted">Loading activity…</p>
+        ) : data.every(m => m.deposits === 0 && m.withdrawals === 0 && m.transfers === 0) ? (
+          // New account / no transactions: a message instead of an empty chart full of $0 labels
+          <div className="flex h-full items-center justify-center">
+            <p className="text-small text-text-muted">No activity in the last 6 months yet.</p>
+          </div>
         ) : (
           // ResponsiveContainer: the chart fills the box and resizes with the window
           <ResponsiveContainer width="100%" height="100%">
