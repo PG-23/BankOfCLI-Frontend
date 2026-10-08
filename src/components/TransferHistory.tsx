@@ -70,7 +70,7 @@ function TransferHistory() {
                 </div>
 
                 {/* Table for displaying transaction history */}
-                <table style={{ height: `${PAGE_SIZE + 1 * 50}px` }}>
+                <table>
                     {/* Table header for transaction history */}
                     <thead>
                         <tr>
