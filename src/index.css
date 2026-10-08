@@ -10,53 +10,46 @@
 @import "tailwindcss";
 
 @theme {
-  /* ---------- Colors ---------- */
-  /* ---------- Surfaces ---------- */
-  --color-background: #faf9f7; /* page background — login, register, dashboard */
-  --color-surface: #ffffff; /* cards, form containers, dropdowns */
-  --color-border: #dedede; /* input outlines, container borders, dividers */
+    /* ---------- Colors ---------- */
+    /* ---------- Surfaces ---------- */
+    --color-background: #faf9f7; /* page background — login, register, dashboard */
+    --color-surface: #ffffff; /* cards, form containers, dropdowns */
+    --color-border: #dedede; /* input outlines, container borders, dividers */
 
-  /* ---------- Text ---------- */
-  --color-text-main: #1a1a1a; /* headings, labels, balances, body text */
-  --color-text-muted: #626262; /* dates, helper text, descriptions — secondary info only */
+    /* ---------- Text ---------- */
+    --color-text-main: #1a1a1a; /* headings, labels, balances, body text */
+    --color-text-muted: #626262; /* dates, helper text, descriptions — secondary info only */
 
-  /* ---------- Brand ---------- */
-  --color-primary: #009b77; /* teal — navbar, success icons, deposit chart */
-  --color-primary-strong: #007a5e; /* primary button background (darker for white text) */
-  --color-primary-hover: #00664f; /* primary button hover state */
-  --color-secondary: #f47920; /* orange — secondary actions, transfer chart */
-  --color-highlight: #ff8a80; /* coral — badges, highlights, withdrawal chart */
-  --color-error: #e8202a; /* red — invalid inputs, insufficient funds, warnings ONLY */
-  --color-link: #b94e00; /* text links */
+    /* ---------- Brand ---------- */
+    --color-primary: #009b77; /* teal — navbar, success icons, deposit chart */
+    --color-primary-strong: #007a5e; /* primary button background (darker for white text) */
+    --color-primary-hover: #00664f; /* primary button hover state */
+    --color-secondary: #f47920; /* orange — secondary actions, transfer chart */
+    --color-highlight: #ff8a80; /* coral — badges, highlights, withdrawal chart */
+    --color-error: #e8202a; /* red — invalid inputs, insufficient funds, warnings ONLY */
+    --color-link: #b94e00; /* text links */
 
-  /* ---------- Message backgrounds ---------- */
-  --color-success-bg: #e8f6f2; /* success toast / message background */
-  --color-error-bg: #fff0f2; /* error toast / message background */
+    /* ---------- Message backgrounds ---------- */
+    --color-success-bg: #e8f6f2; /* success toast / message background */
+    --color-error-bg: #fff0f2; /* error toast / message background */
 
-  /* ---------- Font family ---------- */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  /* Inter everywhere — the default app font */
+    /* ---------- Font family ---------- */
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    /* Inter everywhere — the default app font */
 
-  /* ---------- Font sizes ---------- */
-  --text-heading: 2rem; /* 32px — page titles ("Login to Bank of CLI", "Dashboard") */
-  --text-title: 1.375rem; /* 22px — section titles inside cards ("Recent Transactions") */
-  --text-base: 0.9375rem; /* 15px — labels, body text, nav links, button text */
-  --text-small: 0.8125rem; /* 13px — helper text, validation messages, dates */
+    /* ---------- Font sizes ---------- */
+    --text-heading: 2rem; /* 32px — page titles ("Login to Bank of CLI", "Dashboard") */
+    --text-title: 1.375rem; /* 22px — section titles inside cards ("Recent Transactions") */
+    --text-base: 0.9375rem; /* 15px — labels, body text, nav links, button text */
+    --text-small: 0.8125rem; /* 13px — helper text, validation messages, dates */
 
-  /* ---------- Font weights ---------- */
-  --font-weight-regular: 400; /* body text, descriptions */
-  --font-weight-medium: 500; /* input labels */
-  --font-weight-semibold: 600; /* buttons, nav, section titles */
-  --font-weight-bold: 700; /* page headings only */
+    /* ---------- Font weights ---------- */
+    --font-weight-regular: 400; /* body text, descriptions */
+    --font-weight-medium: 500; /* input labels */
+    --font-weight-semibold: 600; /* buttons, nav, section titles */
+    --font-weight-bold: 700; /* page headings only */
 
-  /* ---------- Spacing (padding, margins, gaps) ---------- */
-  --spacing-xs: 4px; /* tight gaps — between a label and its input */
-  --spacing-sm: 8px; /* small gaps — between stacked form fields */
-  --spacing-md: 16px; /* standard gap — inside cards, between elements */
-  --spacing-lg: 24px; /* card padding, section spacing */
-  --spacing-xl: 32px; /* large gaps — between major page sections */
-
-  /* ---------- Border radius (rounded corners) ---------- */
-  --radius-sm: 8px; /* buttons, inputs */
-  --radius-md: 12px; /* cards, containers */
+    /* ---------- Border radius (rounded corners) ---------- */
+    --radius-sm: 8px; /* buttons, inputs */
+    --radius-md: 12px; /* cards, containers */
 }
