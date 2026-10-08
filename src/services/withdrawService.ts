@@ -1,65 +1,53 @@
-import type {
-  Account,
-  ApiError,
-  Transaction,
-  TransactionResponse,
-  WithdrawRequest,
-} from '../models';
+import type { Account, ApiError, Transaction, TransactionResponse, WithdrawRequest } from '../models';
 import { db, delay } from '../mocks/db';
 import { isValidCents } from '../utils/money';
 
-const fail = (code: ApiError['code'], message: string, field?: string): never => {
+function fail(code: ApiError['code'], message: string, field?: string): never {
   throw { code, message, field } satisfies ApiError;
-};
-
-function createTransactionId(): string {
-  const date = new Date().toISOString().slice(0, 10).replaceAll('-', '');
-  const sequence = Date.now().toString().slice(-6);
-  return `TXN-${date}-${sequence}`;
 }
 
+// Contract format: TXN-YYYYMMDD-NNNNNN, where NNNNNN keeps counting across all
+// transactions (matches the seed data in transactions.json), so IDs never repeat.
+function nextTransactionId(): string {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const lastSeq = Math.max(0, ...db.transactions.map(t => Number(t.id.slice(-6)) || 0));
+  return `TXN-${date}-${String(lastSeq + 1).padStart(6, '0')}`;
+}
+
+// GET /accounts/:accountNumber
 export async function getWithdrawAccount(accountNumber: string): Promise<Account> {
   await delay(350);
 
-  const account = db.accounts.find(item => item.accountNumber === accountNumber);
-  if (!account) {
-    fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.');
-  }
+  const account = db.accounts.find(a => a.accountNumber === accountNumber);
+  if (!account) fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.', 'accountNumber');
 
-  return { ...account! };
+  return { ...account };
 }
 
-export async function withdraw(request: WithdrawRequest): Promise<TransactionResponse> {
+// POST /transactions/withdraw
+export async function withdraw(req: WithdrawRequest): Promise<TransactionResponse> {
   await delay();
 
-  if (!isValidCents(request.amountCents)) {
+  if (!isValidCents(req.amountCents))
     fail('INVALID_AMOUNT', 'Enter a withdrawal amount greater than $0.00.', 'amountCents');
-  }
 
-  const account = db.accounts.find(item => item.accountNumber === request.accountNumber);
-  if (!account) {
-    fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.');
-  }
+  const account = db.accounts.find(a => a.accountNumber === req.accountNumber);
+  if (!account) fail('ACCOUNT_NOT_FOUND', 'The selected account could not be found.', 'accountNumber');
 
-  if (request.amountCents > account!.balanceCents) {
+  if (req.amountCents > account.balanceCents)
     fail('INSUFFICIENT_FUNDS', 'Insufficient funds for this withdrawal.', 'amountCents');
-  }
 
-  account!.balanceCents -= request.amountCents;
+  account.balanceCents -= req.amountCents;
 
   const transaction: Transaction = {
-    id: createTransactionId(),
+    id: nextTransactionId(),
     type: 'withdrawal',
-    amountCents: request.amountCents,
-    fromAccountNumber: request.accountNumber,
+    amountCents: req.amountCents,
+    fromAccountNumber: account.accountNumber,
     toAccountNumber: null,
     timestamp: new Date().toISOString(),
   };
+  db.transactions.push(transaction);
 
-  // When the shared transaction store/service lands in develop, this transaction
-  // can be appended there without changing the WithdrawForm contract.
-  return {
-    transaction,
-    newBalanceCents: account!.balanceCents,
-  };
+  return { transaction, newBalanceCents: account.balanceCents };
 }
