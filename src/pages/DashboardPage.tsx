@@ -38,9 +38,10 @@ export default function DashboardPage(){
                 </section>
                 {/* One container per navbar button. The ids must match the navbar.  */}
                 <DepositSection />
-                <TransferForm />
-                
-                 <ComingSoon id="transaction" title="Recent transactions"/>
+
+                 <ComingSoon id="withdraw" title="withdraw"/>
+                 <ComingSoon id="transfer" title="transfer"/>
+                 <ComingSoon id="transactions" title="Recent transactions"/>
 
                 </main> 
         </div>
