@@ -1,7 +1,8 @@
-import { useState, type ReactNode } from 'react';
+import {useEffect, useState, type ReactNode } from 'react';
 import type { AuthResponse } from '../models';
 import * as authService from '../services/authService';
 import { AuthContext } from './AuthContext';
+import { getAccount } from '../services/accountService';
 
 const STORAGE_KEY = 'bankofcli-auth';
 
@@ -22,6 +23,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (res) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(res));
     else sessionStorage.removeItem(STORAGE_KEY);
   };
+    // After a page refresh the mock db resets to the JSON data, but sessionStorage still holds
+  // the balance from before the refresh. Re-read the account once so the balance always
+  // matches the real data (e.g. Dan goes back to $0).
+  const accountNumber = session?.account.accountNumber;
+  useEffect(() => {
+    if (!accountNumber) return;
+    getAccount(accountNumber)
+      .then(fresh => {
+        setSession(prev => {
+          if (!prev) return prev;
+          const next = { ...prev, account: fresh };
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          return next;
+        });
+      })
+      .catch(() => {
+        // Account no longer exists (e.g. registered before the refresh): ignore for now
+      });
+  }, [accountNumber]);
+
 
   const value = {
     user: session?.user ?? null,

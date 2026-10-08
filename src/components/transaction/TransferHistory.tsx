@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../hooks/useAuth";
 import TransferHistoryRow from "./TransferHistoryRow";
 import "./TransferHistory.css";
 import {
@@ -9,8 +10,13 @@ import {
 import type { Transaction } from "../../models";
 
 function TransferHistory() {
-    // Dummy data for transaction history
+   
+    // Logged-in user's account; changes after every deposit/withdraw/transfer (via updateBalance)
+    const { account } = useAuth();
+        // Transactions shown in the table (current page)
     const [dummyData, setDummyData] = React.useState<Transaction[]>([]);
+
+
     const [totalPages, setTotalPages] = React.useState(0);
 
     // State for the current filter selection
@@ -27,20 +33,16 @@ function TransferHistory() {
 
     // Fetch transactions whenever the filter or page changes
     React.useEffect(() => {
-        let transactions;
+        if(!account) return;
         async function fetchData() {
-            transactions = await getTransactionsFromId(
-                "1000001234",
-                filter,
-                page,
-            );
-            setDummyData(transactions.transactions);
-            setTotalPages(transactions.totalPages);
+            const result = await getTransactionsFromId(account!.accountNumber,filter,page);
+            setDummyData(result.transactions);
+            setTotalPages(result.totalPages);
         }
         fetchData();
 
-        console.log("Done");
-    }, [filter, page]);
+        
+    }, [filter, page, account]);
 
     // This will likely need to be replaced when get actual data but should be able to fit in just fine
 
