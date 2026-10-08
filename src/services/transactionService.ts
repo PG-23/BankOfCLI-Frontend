@@ -11,7 +11,7 @@ export type PaginatedTransactions = {
     totalPages: number;
 };
 
-const PAGE_SIZE = 5;
+export const PAGE_SIZE = 5;
 
 // Get all to retrieve transactions by id, type, and page.
 // Returns a paginated list of transactions matching and the total pages that exist

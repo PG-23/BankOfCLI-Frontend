@@ -4,6 +4,7 @@ import "./TransferHistory.css";
 import {
     getTransactionsFromId,
     type TransactionFilter,
+    PAGE_SIZE,
 } from "../services/transactionService";
 import type { Transaction } from "../models";
 
@@ -69,7 +70,7 @@ function TransferHistory() {
                 </div>
 
                 {/* Table for displaying transaction history */}
-                <table>
+                <table style={{ height: `${PAGE_SIZE + 1 * 50}px` }}>
                     {/* Table header for transaction history */}
                     <thead>
                         <tr>
@@ -86,13 +87,28 @@ function TransferHistory() {
 
                     {/* Body - Mostly handled by TransferHistoryRow component */}
                     <tbody>
-                        {/* Filter and map through the transaction data to display rows */}
                         {dummyData.map((item, index) => (
                             <TransferHistoryRow
                                 key={index}
                                 transaction={item}
-                                accountId={"1000001234"}
+                                accountId="1000001234"
                             />
+                        ))}
+
+                        {/* If there are no values */}
+                        {Array.from({
+                            length: Math.max(0, PAGE_SIZE - dummyData.length),
+                        }).map((_, i) => (
+                            <tr
+                                key={i}
+                                className="empty-row"
+                                aria-hidden="true"
+                            >
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
                         ))}
                     </tbody>
                 </table>

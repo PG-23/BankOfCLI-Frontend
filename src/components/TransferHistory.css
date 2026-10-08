@@ -23,6 +23,10 @@
 /************************************
 *           Table Format            *
 ************************************/
+.empty-row td {
+    color: transparent;
+    border-bottom: 1px solid transparent;
+}
 
 th {
     padding-bottom: 10px;
