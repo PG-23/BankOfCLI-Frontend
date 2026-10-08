@@ -2,15 +2,17 @@
 // useRef   = a value that survives re-renders but doesn't cause one (used for the lookup counter)
 import { useRef, useState, type FormEvent, type ReactNode } from 'react';
 
-import type { ApiError, RecipientLookup } from '../../models';
+import type { ApiError, RecipientLookup, TransactionResponse } from '../../models';
 import { useAuth } from '../../hooks/useAuth';
-import { lookupRecipient } from '../../services/transferService';
+import { lookupRecipient, transfer } from '../../services/transferService';
 import { isValidAccountNumber,isValidReference } from '../../utils/validation';
 import { FormField } from '../FormField';
 import { formatCents, parseDollarsToCents } from '../../utils/money';
 import { RecipientCard } from './RecipientCard';
 import { InfoBanner } from '../InfoBanner';
 import { TransferReview } from './TransferReview';
+import { TransferSuccess } from './TransferSuccess';
+import { notify } from '../../utils/notify';
 
 
 
@@ -42,6 +44,9 @@ export function TransferForm() {
   const [amount, setAmount] = useState('');        // what the user typed, e.g. "650" or "$1,250.50"
   const [reference, setReference] = useState('');  // e.g. "October rent"
   const [review, setReview] = useState<ReviewData | null>(null); // null = show the form, set = show the review screen
+  const [isSubmitting, setIsSubmitting] = useState(false);  //true while transfer() runs
+  const [serverError, setServerError] = useState<string | null>(null); //error with no field
+  const [result,setResult] = useState<TransactionResponse | null>(null);  //set after a successful transfer
 
 
 
@@ -185,6 +190,68 @@ function validateAll():boolean{
       reviewedAt: new Date(),
     });
   }
+// ---------- Confirm button ----------
+async function handleConfirm(){
+  if(!review || !account) return ;
+  setIsSubmitting(true); //disable buttons,show "Sending.."
+  setServerError(null); //clear any old error before retrying
+
+  try{
+    const res = await transfer({
+      fromAccountNumber: account.accountNumber,
+      toAccountNumber:review.recipient.accountNumber,
+      amountCents:review.amountCents,
+      reference:review.reference,
+    });
+    setResult(res); // switches to the success screen
+    notify.success(`${formatCents(review.amountCents)} sent to ${review.recipient.firstName}`);
+  } catch(err){
+    const apiError = err as ApiError;
+    const message = apiError.message ?? 'Something went wrong.Please try again';
+
+    if(apiError.field){
+    // The error belongs to one input: go back to the form and show it there
+    setReview(null);
+    if(apiError.field === 'toAccountNumber'){
+      setRecipient(null);
+      setLookupStatus('error');
+    }
+    setFieldError(apiError.field as FieldName,message);
+  }else{
+    // No field (e.g. session expired): show the banner on the review screen
+    setServerError(message);
+
+  }
+    } finally{
+      setIsSubmitting(false); //runs after both success and error
+    }
+  }
+// "Make another transfer": reset everything to an empty form
+function startNewTransfer(){
+  setToAccount('');
+  setRecipient(null);
+  setLookupStatus('idle');
+  setAmount('');
+  setReference('');
+  setErrors({});
+  setReview(null);
+  setServerError(null);
+  setResult(null);
+
+}
+// success step: shown after transfer() succeeds
+if(result && review){
+  return (
+    <TransferSuccess
+    transaction={result.transaction}
+    newBalanceCents={result.newBalanceCents}
+    recipientName={`${review.recipient.firstName} ${review.recipient.lastName}`}
+    onNewTransfer={startNewTransfer}/>
+
+  );
+}
+
+
   // Review step: show the summary instead of the form.
   // The typed values stay in state, so "Back" returns to a filled-in form.
   if (review) {
@@ -194,8 +261,10 @@ function validateAll():boolean{
         amountCents={review.amountCents}
         reference={review.reference}
         reviewedAt={review.reviewedAt}
-        onBack={() => setReview(null)}
-        onConfirm={() => console.log('Confirm clicked — Part 5 sends the transfer', review)}
+        onBack={() => { setServerError(null); setReview(null); }}
+        onConfirm={handleConfirm}
+        isSubmitting={isSubmitting}
+        serverError={serverError}
       />
     );
   }
@@ -206,7 +275,7 @@ function validateAll():boolean{
 
   // ---------- Layout ----------
   return (
-    <section className="rounded-md border border-border bg-surface p-lg">
+    <section id="transfer" className="rounded-md border border-border bg-surface p-lg">
       {/* Card header: icon + title + subtitle */}
       <div className="flex items-start gap-md">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-success-bg text-primary">
