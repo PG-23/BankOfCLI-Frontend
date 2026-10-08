@@ -12,11 +12,11 @@ In Progress — currently in the design and setup phase.
 
 - [x] Team roles assigned
 - [x] Figma design in progress
-- [X] Project setup (framework, TypeScript, styling)
-- [ ] Component layer
-- [ ] Service layer (mock data)
-- [ ] Data contracts (TypeScript interfaces)
-- [ ] Login / Registration
+- [x] Project setup (framework, TypeScript, styling)
+- [x] Component layer
+- [x] Service layer (mock data)
+- [x] Data contracts (TypeScript interfaces)
+- [x] Login / Registration
 - [ ] Dashboard
 - [ ] Transaction center (Deposit / Withdraw / Transfer)
 - [ ] Loading states & feedback (toasts/modals)
@@ -30,8 +30,8 @@ In Progress — currently in the design and setup phase.
 - **Dashboard** — view current balance and recent transactions
 - **Transaction center** — interactive Deposit, Withdraw, and Transfer forms with client-side validation (no negative amounts, no empty fields)
 - **Professional UX**
-  - Loading states — spinners / skeleton loaders to simulate waiting for a server
-  - Feedback — toast notifications or modals to confirm actions and show errors
+    - Loading states — spinners / skeleton loaders to simulate waiting for a server
+    - Feedback — toast notifications or modals to confirm actions and show errors
 - **Responsive design** — works on desktop and mobile
 
 ---
@@ -40,19 +40,19 @@ In Progress — currently in the design and setup phase.
 
 The app follows a **service-based architecture** so the UI can connect to a real backend later without rewrites. Data is never hardcoded inside UI components.
 
-| Layer | Responsibility |
-|-------|----------------|
+| Layer               | Responsibility                                                                                        |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
 | **Component Layer** | Reusable UI building blocks (buttons, inputs, cards). Never fetch data directly — they ask a service. |
-| **Service Layer** | The "mock engine." Handles all data logic; for now returns hardcoded JSON from local files. |
-| **Contract Layer** | TypeScript interfaces documenting the exact JSON structure, so the real API can match it later. |
+| **Service Layer**   | The "mock engine." Handles all data logic; for now returns hardcoded JSON from local files.           |
+| **Contract Layer**  | TypeScript interfaces documenting the exact JSON structure, so the real API can match it later.       |
 
 ---
 
 ## Tech Stack
 
-- **Framework:** React *(update if Angular)*
+- **Framework:** React _(update if Angular)_
 - **Language:** TypeScript
-- **Styling:** *(Tailwind / Bootstrap / CSS — update with your choice)*
+- **Styling:** _(Tailwind / Bootstrap / CSS — update with your choice)_
 - **Data simulation:** JSON mock files
 - **Design:** Figma
 - **Version control:** Git & GitHub
@@ -62,26 +62,27 @@ The app follows a **service-based architecture** so the UI can connect to a real
 ## Team
 
 | Member           | Responsibility        |
-|----------------  |---------------------  |
-| *Dennis Keithly* | *Transaction History* |
-| *Gian Opbenita*  | *Withdraw*            |
-| *Patrik Guinn*   | *Login/Register*      |
-| *Sohan Shrestha* | *Deposit*             |
-| *Yashvi Bhagat*  | *Transfer*              |
+| ---------------- | --------------------- |
+| _Dennis Keithly_ | _Transaction History_ |
+| _Gian Opbenita_  | _Withdraw_            |
+| _Patrik Guinn_   | _Login/Register_      |
+| _Sohan Shrestha_ | _Deposit_             |
+| _Yashvi Bhagat_  | _Transfer_            |
 
 ---
 
 ## Design
 
-Figma design: *(add your Figma link here)*
+Figma design: _(add your Figma link here)_
 
 **Color palette:**
+
 - Primary (teal): `#009B77`
 - Accent (orange): `#F47920`
 - Highlight (coral): `#FF8A80`
 - Error (red): `#E8202A`
 
-**Fonts:** *(e.g. Inter)*
+**Fonts:** _(e.g. Inter)_
 
 ---
 
@@ -90,4 +91,3 @@ Figma design: *(add your Figma link here)*
 - `main` — stable, released code
 - `develop` — integration branch (features merge here first)
 - `feature/xxx` — individual feature branches
-
