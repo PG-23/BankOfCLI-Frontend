@@ -43,14 +43,14 @@ tbody > tr {
 td:first-child,
 th:first-child {
     text-align: left;
-    width: 60%;
+    width: 50%;
 }
 
 /* Give date and amount some width */
 td:not(:first-child, :last-child),
 th:not(:first-child, :last-child) {
     text-align: left;
-    width: 15%;
+    width: 20%;
 }
 
 /* Let the balance have any left over amount */
