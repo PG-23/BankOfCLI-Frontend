@@ -26,3 +26,44 @@
 ```json
 { "code": "EMAIL_TAKEN", "message": "An account with this email already exists.", "field": "email" }
 ```
+## GET /accounts/{accountNumber}
+Returns the current account state (the account in `AuthResponse` is a login-time snapshot).
+
+**200 OK** (`Account`)
+```json
+{ "accountNumber": "1000001234", "balanceCents": 250000, "userId": "u_1" }
+```
+**404 Not Found**
+```json
+{ "code": "ACCOUNT_NOT_FOUND", "message": "No account found with this number.", "field": "accountNumber" }
+```
+
+## POST /transactions/deposit
+Limits: $1.00 – $25,000.00 per deposit (`100` – `2500000` cents).
+
+**Request** (`DepositRequest`)
+```json
+{ "accountNumber": "1000001234", "amountCents": 125000 }
+```
+**200 OK** (`TransactionResponse`)
+```json
+{
+  "transaction": {
+    "id": "TXN-20261007-000001",
+    "type": "deposit",
+    "amountCents": 125000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-07T14:30:00.000Z"
+  },
+  "newBalanceCents": 375000
+}
+```
+**400 Bad Request**
+```json
+{ "code": "INVALID_AMOUNT", "message": "Deposits must be between $1.00 and $25,000.00.", "field": "amountCents" }
+```
+**404 Not Found**
+```json
+{ "code": "ACCOUNT_NOT_FOUND", "message": "No account found with this number.", "field": "accountNumber" }
+```
