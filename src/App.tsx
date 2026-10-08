@@ -4,9 +4,8 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Navbar/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import { TransferForm } from './components/transfer/TransferForm';
+import DashboardPage from './pages/DashboardPage';
 
-const DashboardPage = () => <div className="p-8">Dashboard (teammate's feature)</div>;
 
 export default function App() {
   return (
@@ -18,12 +17,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             {/* Layout = navbar on top of every logged-in page */}
             <Route element={<Layout />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route
-                path="/transfer"
-                element={<div className="min-h-screen bg-background p-6"><TransferForm /></div>}
-              />
-            </Route>
+              <Route path="/dashboard" element={<DashboardPage />} />            </Route>
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
