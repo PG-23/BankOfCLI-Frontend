@@ -1,8 +1,162 @@
 [
-  { "id": "TXN-0001", "type": "deposit", "amountCents": 100000,
-    "fromAccountNumber": null, "toAccountNumber": "1000001234",
-    "timestamp": "2026-10-01T14:00:00Z" },
-  { "id": "TXN-0002", "type": "transfer", "amountCents": 65000,
-    "fromAccountNumber": "1000001234", "toAccountNumber": "1000005678",
-    "reference": "October rent", "timestamp": "2026-10-03T09:41:00Z" }
+  {
+    "id": "TXN-0001",
+    "type": "deposit",
+    "amountCents": 150000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-01T09:00:00Z"
+  },
+  {
+    "id": "TXN-0002",
+    "type": "deposit",
+    "amountCents": 225000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-01T12:00:00Z"
+  },
+  {
+    "id": "TXN-0003",
+    "type": "withdrawal",
+    "amountCents": 4599,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-01T15:00:00Z"
+  },
+  {
+    "id": "TXN-0004",
+    "type": "withdrawal",
+    "amountCents": 12000,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-02T09:00:00Z"
+  },
+  {
+    "id": "TXN-0005",
+    "type": "transfer",
+    "amountCents": 25000,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-02T12:00:00Z"
+  },
+  {
+    "id": "TXN-0006",
+    "type": "deposit",
+    "amountCents": 35000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-02T15:00:00Z"
+  },
+  {
+    "id": "TXN-0007",
+    "type": "deposit",
+    "amountCents": 60000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-03T09:00:00Z"
+  },
+  {
+    "id": "TXN-0008",
+    "type": "withdrawal",
+    "amountCents": 1899,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-03T12:00:00Z"
+  },
+  {
+    "id": "TXN-0009",
+    "type": "withdrawal",
+    "amountCents": 7500,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-03T15:00:00Z"
+  },
+  {
+    "id": "TXN-0010",
+    "type": "transfer",
+    "amountCents": 10000,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-04T09:00:00Z"
+  },
+  {
+    "id": "TXN-0011",
+    "type": "deposit",
+    "amountCents": 95000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-04T12:00:00Z"
+  },
+  {
+    "id": "TXN-0012",
+    "type": "deposit",
+    "amountCents": 125000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-04T15:00:00Z"
+  },
+  {
+    "id": "TXN-0013",
+    "type": "withdrawal",
+    "amountCents": 3299,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-05T09:00:00Z"
+  },
+  {
+    "id": "TXN-0014",
+    "type": "withdrawal",
+    "amountCents": 20000,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-05T12:00:00Z"
+  },
+  {
+    "id": "TXN-0015",
+    "type": "transfer",
+    "amountCents": 15000,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-05T15:00:00Z"
+  },
+  {
+    "id": "TXN-0016",
+    "type": "deposit",
+    "amountCents": 50000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000005678",
+    "timestamp": "2026-10-06T09:00:00Z"
+  },
+  {
+    "id": "TXN-0017",
+    "type": "deposit",
+    "amountCents": 80000,
+    "fromAccountNumber": null,
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-06T12:00:00Z"
+  },
+  {
+    "id": "TXN-0018",
+    "type": "withdrawal",
+    "amountCents": 999,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-06T15:00:00Z"
+  },
+  {
+    "id": "TXN-0019",
+    "type": "withdrawal",
+    "amountCents": 5000,
+    "fromAccountNumber": "1000001234",
+    "toAccountNumber": null,
+    "timestamp": "2026-10-07T09:00:00Z"
+  },
+  {
+    "id": "TXN-0020",
+    "type": "transfer",
+    "amountCents": 30000,
+    "fromAccountNumber": "1000005678",
+    "toAccountNumber": "1000001234",
+    "timestamp": "2026-10-07T12:00:00Z"
+  }
 ]

@@ -1,9 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import { AuthProvider } from './context/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import Layout from './components/Navbar/Layout';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import { TransferForm } from './components/transfer/TransferForm';
-const LoginPage = () => <div className="p-8">Login page (coming soon)</div>;
-const RegisterPage = () => <div className="p-8">Register page (coming soon)</div>;
+
 const DashboardPage = () => <div className="p-8">Dashboard (teammate's feature)</div>;
 
 export default function App() {
@@ -14,15 +16,19 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route
-              path="/transfer"
-              element={<div className="min-h-screen bg-background p-lg"><TransferForm /></div>}
-            />
+            {/* Layout = navbar on top of every logged-in page */}
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route
+                path="/transfer"
+                element={<div className="min-h-screen bg-background p-6"><TransferForm /></div>}
+              />
+            </Route>
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+
   );
 }

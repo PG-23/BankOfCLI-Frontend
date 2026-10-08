@@ -11,4 +11,4 @@ export const db = {
   transactions: [...transactionData] as Transaction[],
 };
 
-export const delay = (ms = 800) => new Promise(res => setTimeout(res, ms));
+export const delay = (ms = 800) => new Promise((res) => setTimeout(res, ms));
