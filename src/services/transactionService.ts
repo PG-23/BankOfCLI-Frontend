@@ -1,5 +1,5 @@
 import type { Transaction, TransactionType } from "../models";
-import { db } from "../mocks/db";
+import { db, delay } from "../mocks/db";
 
 const { transactions } = db;
 
@@ -11,7 +11,7 @@ export type PaginatedTransactions = {
     totalPages: number;
 };
 
-const pageSize = 5;
+const PAGE_SIZE = 5;
 
 // Get all to retrieve transactions by id, type, and page.
 // Returns a paginated list of transactions matching and the total pages that exist
@@ -20,8 +20,12 @@ export async function getTransactionsFromId(
     type: TransactionFilter = "all",
     page: number = 0,
 ): Promise<PaginatedTransactions> {
+    await delay(500); // Simulate network delay
     // Check to see if a filter exists anywhere
-    const filteredTransactions = transactions.filter((transaction) => {
+    const sorted = [...transactions].sort((a, b) =>
+        b.timestamp.localeCompare(a.timestamp),
+    );
+    const filteredTransactions = sorted.filter((transaction) => {
         const inAccount =
             transaction.fromAccountNumber === id ||
             transaction.toAccountNumber === id;
@@ -37,10 +41,10 @@ export async function getTransactionsFromId(
 
     // Get the paginated transactions based on the current page and page size
     const paginatedTransactions = filteredTransactions.slice(
-        page * pageSize,
-        (page + 1) * pageSize,
+        page * PAGE_SIZE,
+        (page + 1) * PAGE_SIZE,
     );
-    const totalPages = Math.ceil(filteredTransactions.length / pageSize);
+    const totalPages = Math.ceil(filteredTransactions.length / PAGE_SIZE);
     return {
         transactions: paginatedTransactions,
         totalPages,
