@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { getAccountActivity } from '../../services/activityService';
 import { groupByMonth, type MonthActivity } from '../../utils/activity';
 import { formatCents } from '../../utils/money';
+import { Skeleton } from '../ui/Skeleton';
 
 // Y-axis labels: whole dollars with commas, e.g. "$2,000"
 const formatAxis = (cents: number) => `$${Math.round(cents / 100).toLocaleString('en-US')}`;
@@ -27,7 +28,7 @@ export function ActivityChart() {
 
       <div className="mt-4 h-64">
            {data === null ? (
-          <p className="text-small text-text-muted">Loading activity…</p>
+          <Skeleton className="h-full w-full" />
         ) : data.every(m => m.deposits === 0 && m.withdrawals === 0 && m.transfers === 0) ? (
           // New account / no transactions: a message instead of an empty chart full of $0 labels
           <div className="flex h-full items-center justify-center">
