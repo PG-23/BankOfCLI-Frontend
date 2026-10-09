@@ -29,6 +29,12 @@
   --color-error: #E8202A;            /* red — invalid inputs, insufficient funds, warnings ONLY */
   --color-link: #B94E00;             /* text links */
 
+
+   /* ---------- Chart series (validated: color-blind safe, 3:1 on white) ---------- */
+  --color-chart-deposit: #007A5E;    /* deposits bars */
+  --color-chart-withdrawal: #2A78D6; /* withdrawals bars */
+  --color-chart-transfer: #EB6834;   /* outgoing transfers bars */
+
   /* ---------- Message backgrounds ---------- */
   --color-success-bg: #E8F6F2;       /* success toast / message background */
   --color-error-bg: #FFF0F2;         /* error toast / message background */
