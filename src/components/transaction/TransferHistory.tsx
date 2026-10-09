@@ -14,6 +14,8 @@ import { notify } from "../../utils/notify";
 function TransferHistory() {
     const { account } = useAuth();
     const accountNumber = account?.accountNumber;
+    // Changes after every deposit / withdrawal / transfer (they call updateBalance)
+    const balanceCents = account?.balanceCents;
 
     const [transactions, setTransactions] = React.useState<Transaction[]>([]);
     const [totalPages, setTotalPages] = React.useState(0);
@@ -32,7 +34,8 @@ function TransferHistory() {
     );
     const isLastPage = page >= totalPages - 1;
 
-    // Fetch transactions whenever the account, filter, or page changes
+    // Fetch transactions whenever the account, filter, or page changes,
+    // and after a new transaction (the balance changes)
     React.useEffect(() => {
         if (!accountNumber) return;
         let cancelled = false; // ignore results from outdated requests
@@ -59,7 +62,7 @@ function TransferHistory() {
         return () => {
             cancelled = true;
         };
-    }, [accountNumber, filter, page]);
+    }, [accountNumber, filter, page, balanceCents]);
 
     return (
         <>
