@@ -2,7 +2,7 @@ import { useAuth } from '../hooks/useAuth';
 import { TransferForm } from '../components/transfer/TransferForm';
 import { ActivityChart } from '../components/dashboard/ActivityChart';
 import { DepositSection } from '../components/deposit';
-import { WithdrawForm } from '../components/WithdrawForm';
+import { WithdrawSection } from '../components/withdraw';
 import TransferHistory from '../components/transaction/TransferHistory';
 import AccountOverview from '../components/account/AccountOverview';
 
@@ -41,7 +41,7 @@ export default function DashboardPage(){
                 </section>
                 {/* One container per navbar button. The ids must match the navbar.  */}
                 <DepositSection onDeposited={updateBalance} />
-                <WithdrawForm onWithdrawalComplete={(_transaction, newBalanceCents) => updateBalance(newBalanceCents)} />
+                <WithdrawSection onWithdrawn={updateBalance} />
                 <TransferForm />
                 <TransferHistory />
                 

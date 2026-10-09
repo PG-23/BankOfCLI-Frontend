@@ -1,38 +1,37 @@
 import { useState, type FormEvent } from 'react';
-import type { ApiError, TransactionResponse } from '../../models';
+import type { TransactionResponse } from '../../models';
 import { Button, Input, Modal } from '../ui';
-import { DEPOSIT_MAX_CENTS, DEPOSIT_MIN_CENTS, deposit } from '../../services/depositService';
+import { withdraw } from '../../services/withdrawService';
+import { getApiError } from '../../utils/apiError';
 import { formatCents, parseDollarsToCents } from '../../utils/money';
 import { notify } from '../../utils/notify';
 
-type DepositCardProps = {
+type WithdrawCardProps = {
   accountNumber: string;
   balanceCents: number;
-  onDeposited: (res: TransactionResponse) => void; // parent updates its balance / transaction list
+  onWithdrawn: (res: TransactionResponse) => void; // parent updates its balance / transaction list
 };
 
-const RANGE_MESSAGE = `Enter an amount between ${formatCents(DEPOSIT_MIN_CENTS)} and ${formatCents(DEPOSIT_MAX_CENTS)}.`;
-
 // Returns an error message, or undefined if the amount is valid.
-function validateAmount(input: string): string | undefined {
+function validateAmount(input: string, balanceCents: number): string | undefined {
   const trimmed = input.trim();
-  if (trimmed === '') return 'Enter a deposit amount.';
+  if (trimmed === '') return 'Enter a withdrawal amount.';
   if (trimmed.startsWith('-')) return "Amount can't be negative.";
 
   const cents = parseDollarsToCents(trimmed);
   if (cents === null) {
-    const looksLikeMoney = /^\$?[\d,]+(\.\d{1,2})?$/.test(trimmed); // e.g. "0" or "999999999"
-    return looksLikeMoney ? RANGE_MESSAGE : 'Enter a valid dollar amount, like 125.50.';
+    const looksLikeMoney = /^\$?[\d,]+(\.\d{1,2})?$/.test(trimmed); // e.g. "0"
+    return looksLikeMoney ? 'Enter an amount greater than $0.00.' : 'Enter a valid dollar amount, like 125.50.';
   }
-  if (cents < DEPOSIT_MIN_CENTS || cents > DEPOSIT_MAX_CENTS) return RANGE_MESSAGE;
+  if (cents > balanceCents) return `Insufficient funds. Enter ${formatCents(balanceCents)} or less.`;
   return undefined;
 }
 
-function DepositIcon({ className = '' }: { className?: string }) {
+function WithdrawIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"
       strokeLinejoin="round" aria-hidden="true" className={className}>
-      <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14" />
+      <path d="M12 20V9m0 0-4.5 4.5M12 9l4.5 4.5M5 4h14" />
     </svg>
   );
 }
@@ -47,15 +46,29 @@ function CheckCircleIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export function DepositCard({ accountNumber, balanceCents, onDeposited }: DepositCardProps) {
+function AlertCircleIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"
+      strokeLinejoin="round" aria-hidden="true" className={className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7.5v5m0 3.5h.01" />
+    </svg>
+  );
+}
+
+export function WithdrawCard({ accountNumber, balanceCents, onWithdrawn }: WithdrawCardProps) {
   const [amount, setAmount] = useState('');
   const [showErrors, setShowErrors] = useState(false); // only after blur or a submit attempt
+  const [serverError, setServerError] = useState<string | undefined>(); // field error returned by the service
   const [submitting, setSubmitting] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingAmountCents, setPendingAmountCents] = useState<number | null>(null);
 
-  const error = validateAmount(amount);
+  const error = validateAmount(amount, balanceCents);
   const cents = error ? null : parseDollarsToCents(amount);
+  const parsedCents = parseDollarsToCents(amount);
+  const overBalance = parsedCents !== null && parsedCents > balanceCents; // shown right away, as in the design
+  const fieldError = serverError ?? (showErrors || overBalance ? error : undefined);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -76,26 +89,26 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
     setPendingAmountCents(null);
   }
 
-  async function handleConfirmDeposit() {
+  async function handleConfirmWithdrawal() {
     if (pendingAmountCents === null || submitting) return;
 
     setSubmitting(true);
     try {
-      const res = await deposit({ accountNumber, amountCents: pendingAmountCents });
+      const res = await withdraw({ accountNumber, amountCents: pendingAmountCents });
       notify.success(
-        `Deposited ${formatCents(pendingAmountCents)}. New balance: ${formatCents(res.newBalanceCents)}.`,
+        `Withdrew ${formatCents(pendingAmountCents)}. New balance: ${formatCents(res.newBalanceCents)}.`,
       );
       setAmount('');
       setShowErrors(false);
-      setIsConfirmOpen(false);
-      setPendingAmountCents(null);
-      onDeposited(res);
+      onWithdrawn(res);
     } catch (err) {
-      notify.error((err as Partial<ApiError>)?.message ?? 'Something went wrong. Please try again.');
-      setIsConfirmOpen(false);
-      setPendingAmountCents(null);
+      const apiError = getApiError(err);
+      if (apiError?.field === 'amountCents') setServerError(apiError.message);
+      else notify.error(apiError?.message ?? 'The withdrawal could not be completed. Please try again.');
     } finally {
       setSubmitting(false);
+      setIsConfirmOpen(false);
+      setPendingAmountCents(null);
     }
   }
 
@@ -108,77 +121,92 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
       >
         <div className="flex items-start gap-4">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-success-bg text-primary">
-            <DepositIcon className="size-5" />
+            <WithdrawIcon className="size-5" />
           </span>
           <div>
-            <h2 className="text-title font-semibold text-text-main">Deposit funds</h2>
-            <p className="text-small text-text-muted">Add money to your available balance.</p>
+            <h2 className="text-title font-semibold text-text-main">Withdraw funds</h2>
+            <p className="text-small text-text-muted">Move money out of your available balance.</p>
           </div>
         </div>
 
         <div className="flex flex-col gap-1">
           <Input
-            label="Deposit amount *"
+            label="Withdrawal amount *"
             name="amount"
             inputMode="decimal"
             autoComplete="off"
             placeholder="$0.00"
             value={amount}
-            onChange={e => setAmount(e.target.value)}
+            onChange={e => {
+              setAmount(e.target.value);
+              setServerError(undefined);
+            }}
             onBlur={() => amount.trim() !== '' && setShowErrors(true)}
             disabled={submitting}
-            error={showErrors ? error : undefined}
+            error={fieldError}
           />
-          {!(showErrors && error) && <p className="text-small text-text-muted">{RANGE_MESSAGE}</p>}
+          {!fieldError && (
+            <p className="text-small text-text-muted">
+              Enter an amount up to your available balance of {formatCents(balanceCents)}.
+            </p>
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-4">
-          <span className="text-small text-text-muted">Balance after deposit</span>
+          <span className="text-small text-text-muted">Balance after withdrawal</span>
           <span className="font-semibold tabular-nums text-text-main">
-            {formatCents(balanceCents + (cents ?? 0))}
+            {formatCents(balanceCents - (cents ?? 0))}
           </span>
         </div>
 
-        {cents !== null && (
+        {overBalance ? (
+          <div role="alert" className="flex gap-2 rounded-sm border-l-4 border-error bg-error-bg p-4">
+            <AlertCircleIcon className="mt-0.5 size-5 shrink-0 text-error" />
+            <div>
+              <p className="font-medium text-error">Withdrawal cannot be submitted</p>
+              <p className="text-small text-text-muted">Reduce the amount or add funds before withdrawing.</p>
+            </div>
+          </div>
+        ) : cents !== null && (
           <div role="status" className="flex gap-2 rounded-sm border-l-4 border-primary bg-success-bg p-4">
             <CheckCircleIcon className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
-              <p className="font-medium text-text-main">Ready to deposit</p>
+              <p className="font-medium text-text-main">Ready to withdraw</p>
               <p className="text-small text-text-muted">
-                Review and confirm the deposit before your balance is updated.
+                Review and confirm the withdrawal before your balance is updated.
               </p>
             </div>
           </div>
         )}
 
-        <Button type="submit" fullWidth disabled={submitting}>
-          {cents !== null ? `Deposit ${formatCents(cents)}` : 'Deposit'}
-          <DepositIcon className="size-4" />
+        <Button type="submit" fullWidth disabled={submitting || balanceCents <= 0}>
+          {cents !== null ? `Withdraw ${formatCents(cents)}` : 'Withdraw'}
+          <WithdrawIcon className="size-4" />
         </Button>
       </form>
 
       <Modal
         open={isConfirmOpen && pendingAmountCents !== null}
         onClose={closeConfirmation}
-        title="Confirm deposit"
+        title="Confirm withdrawal"
       >
         {pendingAmountCents !== null && (
           <>
             <p className="text-base text-text-muted">
-              Review the amount below before completing the deposit.
+              Review the amount below before completing the withdrawal.
             </p>
 
             <div className="mt-4 rounded-md border border-border bg-background p-4">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-base text-text-muted">Deposit amount</span>
+                <span className="text-base text-text-muted">Withdrawal amount</span>
                 <span className="text-title font-semibold text-text-main">
                   {formatCents(pendingAmountCents)}
                 </span>
               </div>
               <div className="mt-3 flex items-center justify-between gap-4 border-t border-border pt-3">
-                <span className="text-base text-text-muted">Balance after deposit</span>
+                <span className="text-base text-text-muted">Balance after withdrawal</span>
                 <span className="text-base font-semibold text-text-main">
-                  {formatCents(balanceCents + pendingAmountCents)}
+                  {formatCents(balanceCents - pendingAmountCents)}
                 </span>
               </div>
             </div>
@@ -194,10 +222,10 @@ export function DepositCard({ accountNumber, balanceCents, onDeposited }: Deposi
               </Button>
               <Button
                 type="button"
-                onClick={() => void handleConfirmDeposit()}
+                onClick={() => void handleConfirmWithdrawal()}
                 loading={submitting}
               >
-                {submitting ? 'Processing deposit…' : 'Confirm deposit'}
+                {submitting ? 'Processing withdrawal…' : 'Confirm withdrawal'}
               </Button>
             </div>
           </>
