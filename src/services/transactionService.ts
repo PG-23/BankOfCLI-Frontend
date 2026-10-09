@@ -20,6 +20,7 @@ export async function getTransactionsFromId(
     type: TransactionFilter = "all",
     page: number = 0,
 ): Promise<PaginatedTransactions> {
+    await delay(2000); // TEMPORARY: make the skeleton visible
     await delay(500); // Simulate network delay
     // Check to see if a filter exists anywhere
     const sorted = [...transactions].sort((a, b) =>

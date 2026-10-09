@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { getAccountActivity } from '../../services/activityService';
 import { groupByDay, type DayActivity } from '../../utils/activity';
 import { formatCents } from '../../utils/money';
+import { Skeleton } from '../ui/Skeleton';
 
 // How many days the chart covers (today included). Used for the grouping and the text.
 const DAYS = 7;
@@ -31,9 +32,9 @@ export function ActivityChart() {
       </p>
 
       <div className="mt-4 h-64">
-        {data === null ? (
-          <p className="text-small text-text-muted">Loading activity…</p>
-        ) : data.every(d => d.deposits === 0 && d.withdrawals === 0 && d.transfers === 0) ? (
+           {data === null ? (
+          <Skeleton className="h-full w-full" />
+        ) : data.every(m => m.deposits === 0 && m.withdrawals === 0 && m.transfers === 0) ? (
           // New account / no transactions: a message instead of an empty chart full of $0 labels
           <div className="flex h-full items-center justify-center">
             <p className="text-small text-text-muted">No activity in the last {DAYS} days yet.</p>
