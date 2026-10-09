@@ -14,6 +14,62 @@ interface WithdrawFormProps {
     ) => void;
 }
 
+function WithdrawIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M12 20V9m0 0-4.5 4.5M12 9l4.5 4.5M5 4h14" />
+    </svg>
+  );
+}
+
+function CheckCircleIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8.5 12 2.5 2.5 4.5-5" />
+    </svg>
+  );
+}
+
+function validateAmount(input: string, balanceCents: number): string | undefined {
+  const trimmed = input.trim();
+
+  if (trimmed === '') return 'Enter a withdrawal amount.';
+  if (trimmed.startsWith('-')) return "Amount can't be negative.";
+
+  const cents = parseDollarsToCents(trimmed);
+  if (cents === null) {
+    const looksLikeMoney = /^\$?[\d,]+(\.\d{1,2})?$/.test(trimmed);
+    return looksLikeMoney
+      ? `Enter an amount between $0.01 and ${formatCents(balanceCents)}.`
+      : 'Enter a valid dollar amount, like 125.50.';
+  }
+
+  if (cents > balanceCents) {
+    return `Amount can't exceed your available balance of ${formatCents(balanceCents)}.`;
+  }
+
+  return undefined;
+}
+
 export function WithdrawForm({ onWithdrawalComplete }: WithdrawFormProps) {
     const { account } = useAuth();
     const [amount, setAmount] = useState("");
