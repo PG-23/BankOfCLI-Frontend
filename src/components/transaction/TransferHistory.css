@@ -24,6 +24,12 @@
 /************************************
 *           Table Format            *
 ************************************/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
 .empty-row td {
     color: transparent;
     border-bottom: 1px solid transparent;
@@ -37,9 +43,15 @@ th {
 tbody > tr {
     padding: 3px 0px 5px 0px;
     border-bottom: 1px solid var(--color-border);
+    width: 100%;
 }
 
 /* Give the transaction name/note more width than anything else */
+.loading-cell {
+    width: 100%;
+    padding: 2px 0;
+}
+
 td:first-child,
 th:first-child {
     text-align: left;

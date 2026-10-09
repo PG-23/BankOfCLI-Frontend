@@ -40,7 +40,11 @@ function TransferHistory() {
         async function fetchData() {
             setLoading(true);
             try {
-                const result = await getTransactionsFromId(accountNumber!, filter, page);
+                const result = await getTransactionsFromId(
+                    accountNumber!,
+                    filter,
+                    page,
+                );
                 if (cancelled) return;
                 setTransactions(result.transactions);
                 setTotalPages(result.totalPages);
@@ -59,7 +63,7 @@ function TransferHistory() {
 
     return (
         <>
-            <div className="container" id="transactions">
+            <div className="transaction-history" id="transactions">
                 {/* Basic info + sorting capabilities */}
                 <div className="header">
                     <div className="text-title">Transactions</div>
@@ -86,28 +90,42 @@ function TransferHistory() {
                 <table aria-busy={loading}>
                     <thead>
                         <tr>
-                            <th className="text-base first-column">Transaction</th>
+                            <th className="text-base first-column">
+                                Transaction
+                            </th>
                             <th className="text-base text-align-right">Date</th>
                             <th className="text-base mid-column">Type</th>
-                            <th className="text-base text-align-left">Amount</th>
+                            <th className="text-base text-align-left">
+                                Amount
+                            </th>
                         </tr>
                     </thead>
 
+                    {/* Table content */}
                     <tbody>
                         {loading ? (
                             /* Skeleton rows while loading */
-                            Array.from({ length: PAGE_SIZE }, (_, i) => (
-                                <tr key={`skeleton-${i}`} aria-hidden="true">
-                                    <td><Skeleton className="h-4 w-32" /></td>
-                                    <td><Skeleton className="ml-auto h-4 w-20" /></td>
-                                    <td><Skeleton className="h-4 w-16" /></td>
-                                    <td><Skeleton className="h-4 w-20" /></td>
-                                </tr>
-                            ))
+                            <>
+                                {Array.from({ length: PAGE_SIZE }).map(
+                                    (_, i) => (
+                                        <tr key={`loading-${i}`}>
+                                            <td
+                                                colSpan={4}
+                                                className="loading-cell"
+                                            >
+                                                <Skeleton className="h-5 w-full" />
+                                            </td>
+                                        </tr>
+                                    ),
+                                )}
+                            </>
                         ) : transactions.length === 0 ? (
                             /* Empty state */
                             <tr>
-                                <td colSpan={4} className="py-8 text-center text-text-muted">
+                                <td
+                                    colSpan={4}
+                                    className="py-8 text-center text-text-muted"
+                                >
                                     {filter === "all"
                                         ? "No transactions yet."
                                         : "No transactions of this type."}
@@ -115,6 +133,7 @@ function TransferHistory() {
                             </tr>
                         ) : (
                             <>
+                                {/* Transaction rows */}
                                 {transactions.map((item) => (
                                     <TransferHistoryRow
                                         key={item.id}
@@ -125,9 +144,16 @@ function TransferHistory() {
 
                                 {/* Filler rows keep the table height steady on the last page */}
                                 {Array.from({
-                                    length: Math.max(0, PAGE_SIZE - transactions.length),
+                                    length: Math.max(
+                                        0,
+                                        PAGE_SIZE - transactions.length,
+                                    ),
                                 }).map((_, i) => (
-                                    <tr key={`empty-${i}`} className="empty-row" aria-hidden="true">
+                                    <tr
+                                        key={`empty-${i}`}
+                                        className="empty-row"
+                                        aria-hidden="true"
+                                    >
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>
                                         <td>&nbsp;</td>

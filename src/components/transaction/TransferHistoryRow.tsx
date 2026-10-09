@@ -5,6 +5,7 @@ import {
     ArrowLeftRight,
 } from "react-bootstrap-icons";
 import { formatCents } from "../../utils/money";
+import "../transaction/TransferHistory.css";
 
 function TransferHistoryRow({
     transaction,
@@ -24,32 +25,34 @@ function TransferHistoryRow({
         <tr>
             {/* Icon indicating the type of transaction */}
             {/* Green indicates money coming into account, red out of it */}
-            <td className="flex flex-row items-center">
-                {transaction.type === "deposit" ? (
-                    <>
-                        <ArrowDownCircleFill className="green icon" />
-                        <span className="ml-2">Deposit</span>
-                    </>
-                ) : null}
-                {transaction.type === "withdrawal" ? (
-                    <>
-                        <ArrowUpCircleFill className="red icon" />
-                        <span className="ml-2">Withdrawal</span>
-                    </>
-                ) : null}
-                {/* Check if transfer and if money is coming in or out of account */}
-                {transaction.type === "transfer" ? (
-                    <>
-                        <ArrowLeftRight
-                            className={`${inToAccount ? "green" : "red"} icon`}
-                        />
-                        <span className="ml-2">
-                            {inToAccount
-                                ? `Transfer from account ${transaction.fromAccountNumber}`
-                                : `Transfer to account ${transaction.toAccountNumber}`}
-                        </span>
-                    </>
-                ) : null}
+            <td>
+                <div className="flex flex-row items-center">
+                    {transaction.type === "deposit" ? (
+                        <>
+                            <ArrowDownCircleFill className="green icon" />
+                            <span className="ml-2">Deposit</span>
+                        </>
+                    ) : null}
+                    {transaction.type === "withdrawal" ? (
+                        <>
+                            <ArrowUpCircleFill className="red icon" />
+                            <span className="ml-2">Withdrawal</span>
+                        </>
+                    ) : null}
+                    {/* Check if transfer and if money is coming in or out of account */}
+                    {transaction.type === "transfer" ? (
+                        <>
+                            <ArrowLeftRight
+                                className={`${inToAccount ? "green" : "red"} icon`}
+                            />
+                            <span className="ml-2">
+                                {inToAccount
+                                    ? `Transfer from account ${transaction.fromAccountNumber}`
+                                    : `Transfer to account ${transaction.toAccountNumber}`}
+                            </span>
+                        </>
+                    ) : null}
+                </div>
             </td>
 
             {/* Date and time of the transaction */}
