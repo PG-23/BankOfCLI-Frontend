@@ -32,7 +32,9 @@ function TransferHistory() {
     );
     const isLastPage = page >= totalPages - 1;
 
-    // Fetch transactions whenever the account, filter, or page changes
+    // Fetch transactions whenever auth account state, filter, or page changes.
+    // Including `account` ensures auth updates (e.g. balance updates after transfers)
+    // trigger a refresh even when the account number itself stays the same.
     React.useEffect(() => {
         if (!accountNumber) return;
         let cancelled = false; // ignore results from outdated requests
@@ -59,7 +61,7 @@ function TransferHistory() {
         return () => {
             cancelled = true;
         };
-    }, [accountNumber, filter, page]);
+    }, [account, accountNumber, filter, page]);
 
     return (
         <>
